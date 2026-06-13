@@ -1,0 +1,57 @@
+import Link from "next/link";
+import type { Product } from "@/lib/types";
+import { formatPrice, stockLabel } from "@/lib/format";
+import { Badge } from "@/components/ui/badge";
+
+const toneMap = { ok: "ok", warn: "warn", off: "off" } as const;
+
+export function ProductCard({ product }: { product: Product }) {
+  const stock = stockLabel(product.stock);
+  return (
+    <Link
+      href={`/products/${product.slug}`}
+      className="group flex flex-col overflow-hidden rounded-[var(--radius,0.875rem)] rounded-2xl border border-border bg-surface transition-shadow hover:shadow-lg"
+    >
+      {/* Placeholder product visual — SVG vial, no third-party imagery */}
+      <div className="relative flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-brand-50 to-accent-50">
+        <VialGlyph />
+        <span className="absolute left-3 top-3">
+          <Badge tone="brand">{product.purity}% purity</Badge>
+        </span>
+      </div>
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="font-semibold tracking-tight">{product.name}</h3>
+          <Badge tone={toneMap[stock.tone]}>{stock.text}</Badge>
+        </div>
+        <p className="line-clamp-2 text-sm text-muted-foreground">{product.tagline}</p>
+        <div className="mt-auto flex items-end justify-between pt-2">
+          <div>
+            <span className="text-lg font-semibold">{formatPrice(product.priceCents)}</span>
+            {product.compareAtCents ? (
+              <span className="ml-2 text-sm text-muted-foreground line-through">
+                {formatPrice(product.compareAtCents)}
+              </span>
+            ) : null}
+          </div>
+          <span className="text-xs text-muted-foreground">{product.size}</span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function VialGlyph() {
+  return (
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <rect x="24" y="6" width="16" height="6" rx="2" fill="var(--color-brand-600)" />
+      <path
+        d="M26 12h12v36a6 6 0 0 1-12 0V12Z"
+        fill="white"
+        stroke="var(--color-brand-600)"
+        strokeWidth="2"
+      />
+      <path d="M26 34h12v14a6 6 0 0 1-12 0V34Z" fill="var(--color-brand-300)" />
+    </svg>
+  );
+}

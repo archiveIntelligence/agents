@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/*
+  Veridian Peptides — Design System
+  Original branding (no third-party brand assets).
+  Primary: Emerald/Teal · Accent: Violet
+*/
+
+@theme {
+  /* ---- Brand: Emerald / Teal (primary) ---- */
+  --color-brand-50: #ecfdf6;
+  --color-brand-100: #d1faec;
+  --color-brand-200: #a7f3da;
+  --color-brand-300: #6ee7bf;
+  --color-brand-400: #34d39e;
+  --color-brand-500: #12b886;
+  --color-brand-600: #0c9a72;
+  --color-brand-700: #0a7a5d;
+  --color-brand-800: #0b614b;
+  --color-brand-900: #0a4f3f;
+  --color-brand-950: #022c22;
+
+  /* ---- Accent: Violet ---- */
+  --color-accent-50: #f5f3ff;
+  --color-accent-100: #ede9fe;
+  --color-accent-200: #ddd6fe;
+  --color-accent-300: #c4b5fd;
+  --color-accent-400: #a78bfa;
+  --color-accent-500: #8b5cf6;
+  --color-accent-600: #7c3aed;
+  --color-accent-700: #6d28d9;
+  --color-accent-800: #5b21b6;
+  --color-accent-900: #4c1d95;
+
+  /* ---- Neutral scale ---- */
+  --color-ink-50: #f7f8f8;
+  --color-ink-100: #eef0f1;
+  --color-ink-200: #dde1e3;
+  --color-ink-300: #c2c9cd;
+  --color-ink-400: #9aa4aa;
+  --color-ink-500: #717c84;
+  --color-ink-600: #586066;
+  --color-ink-700: #444b50;
+  --color-ink-800: #2b3034;
+  --color-ink-900: #1a1d20;
+  --color-ink-950: #0e1012;
+
+  /* ---- Semantic ---- */
+  --color-success: #0c9a72;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+  --color-info: #2563eb;
+
+  /* ---- Fonts ---- */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/* Semantic surface tokens (light) */
+:root {
+  --background: #f7f8f8;
+  --surface: #ffffff;
+  --surface-muted: #eef0f1;
+  --foreground: #1a1d20;
+  --muted-foreground: #717c84;
+  --border-color: #dde1e3;
+  --ring: #12b886;
+}
+
+.dark {
+  --background: #0e1012;
+  --surface: #1a1d20;
+  --surface-muted: #2b3034;
+  --foreground: #f7f8f8;
+  --muted-foreground: #9aa4aa;
+  --border-color: #2b3034;
+  --ring: #34d39e;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border-color);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    border-color: var(--border-color);
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .container-px {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 80rem;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 640px) {
+    .container-px {
+      padding-inline: 1.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .container-px {
+      padding-inline: 2rem;
+    }
+  }
+}
