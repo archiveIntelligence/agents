@@ -109,10 +109,21 @@ Without a `DATABASE_URL`, the app still runs against the in-memory seed dataset.
 - Legal: Privacy, Terms, Cookie settings (templates)
 - Reusable content shell; every header/footer link now resolves
 
-## Roadmap (next milestones)
+## Implemented (milestone 9 — testing & CI/CD)
 
-8. **i18n & multi-currency**, SEO (sitemap, JSON-LD), cookie consent
-9. **Testing & CI/CD** — Vitest, Playwright, GitHub Actions, Docker
+- Vitest unit tests: pricing, payment webhook (HMAC), repository, formatting
+- Cart store refactored to `useSyncExternalStore` (lint-clean, no setState-in-effect)
+- GitHub Actions CI: install → lint → test → build (scoped to this app)
+- Production Docker image (Next standalone) + `docker-compose` with Postgres
+
+```bash
+pnpm test            # run unit tests
+docker compose up    # app + postgres
+```
+
+## Roadmap (remaining)
+
+8. **i18n & multi-currency**, SEO (sitemap, JSON-LD), cookie consent banner
 5. **Auth & accounts** — Auth.js, RBAC, orders, tracking, addresses
 6. **Admin** — products, orders, COA upload, blog CMS
 7. **Content pages** — quality, FAQ, about, legal, shipping, blog detail

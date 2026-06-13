@@ -172,21 +172,18 @@ export default function CheckoutPage() {
             <div className="space-y-6">
               <Section title="Payment method">
                 <PaymentOption
-                  id="sepa"
                   selected={payment === "sepa"}
                   onSelect={() => setPayment("sepa")}
                   title="SEPA bank transfer"
                   desc="Pay by EU bank transfer. Instructions sent by email; ships once received."
                 />
                 <PaymentOption
-                  id="paysera"
                   selected={payment === "paysera"}
                   onSelect={() => setPayment("paysera")}
                   title="Paysera"
                   desc="Pay instantly via the Paysera gateway (sandbox)."
                 />
                 <PaymentOption
-                  id="crypto"
                   selected={payment === "crypto"}
                   onSelect={() => setPayment("crypto")}
                   title="Card → crypto (USDC/USDT)"
@@ -306,13 +303,11 @@ function Field({
 }
 
 function PaymentOption({
-  id,
   selected,
   onSelect,
   title,
   desc,
 }: {
-  id: string;
   selected: boolean;
   onSelect: () => void;
   title: string;

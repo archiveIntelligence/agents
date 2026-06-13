@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { products } from "@/lib/data";
 import type { Product } from "@/lib/types";
 import { priceCart, type PriceBreakdown } from "./pricing";
@@ -23,7 +16,98 @@ export interface CartLine extends CartItem {
   product: Product;
 }
 
-interface CartContextValue {
+// --- External store (idiomatic localStorage sync, no setState-in-effect) ---
+
+const EMPTY: CartItem[] = [];
+let items: CartItem[] = EMPTY;
+let loaded = false;
+const listeners = new Set<() => void>();
+
+function load() {
+  if (loaded || typeof window === "undefined") return;
+  loaded = true;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) items = JSON.parse(raw) as CartItem[];
+  } catch {
+    // ignore malformed storage
+  }
+}
+
+function persist() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  } catch {
+    // storage may be unavailable (private mode, quota)
+  }
+}
+
+function emit() {
+  for (const l of listeners) l();
+}
+
+function setItems(next: CartItem[]) {
+  items = next;
+  persist();
+  emit();
+}
+
+function subscribe(listener: () => void) {
+  load();
+  listeners.add(listener);
+  const onStorage = (e: StorageEvent) => {
+    if (e.key === STORAGE_KEY) {
+      try {
+        items = e.newValue ? (JSON.parse(e.newValue) as CartItem[]) : [];
+      } catch {
+        items = [];
+      }
+      emit();
+    }
+  };
+  window.addEventListener("storage", onStorage);
+  return () => {
+    listeners.delete(listener);
+    window.removeEventListener("storage", onStorage);
+  };
+}
+
+const getSnapshot = () => items;
+const getServerSnapshot = () => EMPTY;
+
+// Mutations (module-level so they are stable references).
+function add(slug: string, quantity = 1) {
+  const existing = items.find((i) => i.slug === slug);
+  setItems(
+    existing
+      ? items.map((i) => (i.slug === slug ? { ...i, quantity: i.quantity + quantity } : i))
+      : [...items, { slug, quantity }],
+  );
+}
+
+function setQuantity(slug: string, quantity: number) {
+  setItems(
+    quantity <= 0
+      ? items.filter((i) => i.slug !== slug)
+      : items.map((i) => (i.slug === slug ? { ...i, quantity } : i)),
+  );
+}
+
+function remove(slug: string) {
+  setItems(items.filter((i) => i.slug !== slug));
+}
+
+function clear() {
+  setItems([]);
+}
+
+// --- Hook & passthrough provider ---
+
+function productBySlug(slug: string): Product | undefined {
+  return products.find((p) => p.slug === slug);
+}
+
+export interface CartApi {
   items: CartItem[];
   lines: CartLine[];
   count: number;
@@ -35,80 +119,32 @@ interface CartContextValue {
   ready: boolean;
 }
 
-const CartContext = createContext<CartContextValue | null>(null);
-
-function productBySlug(slug: string): Product | undefined {
-  return products.find((p) => p.slug === slug);
+/** Provider is a passthrough; the store lives at module scope. */
+export function CartProvider({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [ready, setReady] = useState(false);
-
-  // Hydrate from localStorage once on mount.
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setItems(JSON.parse(raw) as CartItem[]);
-    } catch {
-      // ignore malformed storage
-    }
-    setReady(true);
-  }, []);
-
-  // Persist on change (after hydration).
-  useEffect(() => {
-    if (!ready) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items, ready]);
-
-  const add = useCallback((slug: string, quantity = 1) => {
-    setItems((prev) => {
-      const existing = prev.find((i) => i.slug === slug);
-      if (existing) {
-        return prev.map((i) =>
-          i.slug === slug ? { ...i, quantity: i.quantity + quantity } : i,
-        );
-      }
-      return [...prev, { slug, quantity }];
-    });
-  }, []);
-
-  const setQuantity = useCallback((slug: string, quantity: number) => {
-    setItems((prev) =>
-      quantity <= 0
-        ? prev.filter((i) => i.slug !== slug)
-        : prev.map((i) => (i.slug === slug ? { ...i, quantity } : i)),
-    );
-  }, []);
-
-  const remove = useCallback((slug: string) => {
-    setItems((prev) => prev.filter((i) => i.slug !== slug));
-  }, []);
-
-  const clear = useCallback(() => setItems([]), []);
+export function useCart(): CartApi {
+  const current = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const lines = useMemo<CartLine[]>(
     () =>
-      items
+      current
         .map((i) => {
           const product = productBySlug(i.slug);
           return product ? { ...i, product } : null;
         })
         .filter((l): l is CartLine => l !== null),
-    [items],
+    [current],
   );
 
   const breakdown = useMemo(
-    () =>
-      priceCart(
-        lines.map((l) => ({ priceCents: l.product.priceCents, quantity: l.quantity })),
-      ),
+    () => priceCart(lines.map((l) => ({ priceCents: l.product.priceCents, quantity: l.quantity }))),
     [lines],
   );
 
-  const value: CartContextValue = {
-    items,
+  return {
+    items: current,
     lines,
     count: breakdown.itemCount,
     breakdown,
@@ -116,14 +152,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setQuantity,
     remove,
     clear,
-    ready,
+    ready: current !== EMPTY || loaded,
   };
-
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
-}
-
-export function useCart() {
-  const ctx = useContext(CartContext);
-  if (!ctx) throw new Error("useCart must be used within a CartProvider");
-  return ctx;
 }

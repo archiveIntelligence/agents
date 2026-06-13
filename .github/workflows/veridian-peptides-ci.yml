@@ -1,0 +1,48 @@
+name: Veridian Peptides CI
+
+# Scoped to the veridian-peptides app so it never interferes with the
+# rest of the repository.
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "veridian-peptides/**"
+      - ".github/workflows/veridian-peptides-ci.yml"
+  pull_request:
+    paths:
+      - "veridian-peptides/**"
+      - ".github/workflows/veridian-peptides-ci.yml"
+
+defaults:
+  run:
+    working-directory: veridian-peptides
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: veridian-peptides/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Unit tests
+        run: pnpm test
+
+      # Builds against the in-memory seed dataset (no DATABASE_URL),
+      # which keeps CI hermetic and fast.
+      - name: Build
+        run: pnpm build
