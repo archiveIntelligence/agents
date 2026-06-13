@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
-import { ButtonLink } from "@/components/ui/button";
+import { CartButton } from "@/components/layout/cart-button";
 
 const nav = [
   { href: "/products", label: "All Peptides" },
@@ -37,9 +37,7 @@ export function Header() {
           >
             Sign in
           </Link>
-          <ButtonLink href="/cart" size="sm">
-            Cart
-          </ButtonLink>
+          <CartButton />
         </div>
       </div>
     </header>

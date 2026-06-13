@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { AddToCart } from "@/components/product/add-to-cart";
 import { ProductCard } from "@/components/product/product-card";
 import {
   getCategory,
@@ -97,13 +97,12 @@ export default async function ProductPage({
             <span className="pb-1 text-sm text-muted-foreground">/ {product.size}</span>
           </div>
 
-          <div className="mt-6 flex gap-3">
-            <Button size="lg" disabled={product.stock === "out_of_stock"}>
-              {product.stock === "pre_order" ? "Pre-order" : "Add to cart"}
-            </Button>
-            <Button size="lg" variant="secondary">
-              Add to research list
-            </Button>
+          <div className="mt-6">
+            <AddToCart
+              slug={product.slug}
+              label={product.stock === "pre_order" ? "Pre-order" : "Add to cart"}
+              disabled={product.stock === "out_of_stock"}
+            />
           </div>
 
           <p className="mt-4 rounded-lg bg-surface-muted p-3 text-xs text-muted-foreground">
