@@ -4,6 +4,7 @@ import { products } from "@/lib/data";
 import { priceCart } from "./pricing";
 import { getPaymentProvider } from "@/lib/payments/registry";
 import type { PaymentInitiation, PaymentMethod } from "@/lib/payments/types";
+import { getCurrentUser } from "@/lib/auth/session";
 
 export type { PaymentMethod };
 
@@ -74,9 +75,13 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
       });
       const idBySlug = new Map(dbProducts.map((p) => [p.slug, p.id]));
 
+      // Attach the order to the signed-in account, if any.
+      const currentUser = await getCurrentUser();
+
       const order = await prisma.order.create({
         data: {
           reference,
+          userId: currentUser?.id ?? null,
           email: input.contact.email,
           firstName: input.contact.firstName,
           lastName: input.contact.lastName,

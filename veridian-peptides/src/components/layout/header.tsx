@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
 import { CartButton } from "@/components/layout/cart-button";
+import { getCurrentUser } from "@/lib/auth/session";
 
 const nav = [
   { href: "/products", label: "All Peptides" },
@@ -10,7 +11,8 @@ const nav = [
   { href: "/blog", label: "Research Blog" },
 ];
 
-export function Header() {
+export async function Header() {
+  const user = await getCurrentUser();
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/80 backdrop-blur">
       <div className="container-px flex h-16 items-center justify-between gap-6">
@@ -32,10 +34,10 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <Link
-            href="/account"
+            href={user ? "/account" : "/account/login"}
             className="hidden text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline"
           >
-            Sign in
+            {user ? `Hi, ${user.firstName}` : "Sign in"}
           </Link>
           <CartButton />
         </div>

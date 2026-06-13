@@ -82,9 +82,18 @@ Without a `DATABASE_URL`, the app still runs against the in-memory seed dataset.
 - Sandbox hosted-payment page when no provider keys are set
 - Orders persisted with provider reference; status → PAID on confirmation
 
+## Implemented (milestone 5 — auth & accounts)
+
+- User + Session models, `Role` (CUSTOMER/ADMIN), orders linked to accounts
+- DB-backed sessions via httpOnly cookie; bcrypt password hashing (cost 12)
+- Register / login / logout server actions with validation + enumeration guard
+- Account dashboard with order history; guest orders re-linked on signup
+- Authorised order tracking (`/track`) — owner or matching email
+- Header reflects auth state; `requireAdmin` helper for the backoffice
+
 ## Roadmap (next milestones)
 
-5. **Auth & accounts** — Auth.js, RBAC, order history, tracking, addresses
+6. **Admin panel** — products, orders, COA upload, blog CMS (RBAC-gated)
 5. **Auth & accounts** — Auth.js, RBAC, orders, tracking, addresses
 6. **Admin** — products, orders, COA upload, blog CMS
 7. **Content pages** — quality, FAQ, about, legal, shipping, blog detail
