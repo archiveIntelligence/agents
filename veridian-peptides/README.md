@@ -72,10 +72,19 @@ Without a `DATABASE_URL`, the app still runs against the in-memory seed dataset.
 - Prisma-backed repository, auto-selected when `DATABASE_URL` is set
 - Orders persisted on checkout
 
+## Implemented (milestone 4 — payments)
+
+- `PaymentProvider` adapter interface; checkout depends only on it
+- Providers: SEPA (instructions), Paysera (redirect), **NOWPayments**
+  (card → USDC/USDT stablecoin settlement — peptide-friendly, no rolling reserve)
+- Provider registry: swap the crypto slot (e.g. Cryptomus) in one line
+- Idempotent NOWPayments IPN webhook with HMAC-SHA512 verification
+- Sandbox hosted-payment page when no provider keys are set
+- Orders persisted with provider reference; status → PAID on confirmation
+
 ## Roadmap (next milestones)
 
-4. **Payments** — high-risk gateway adapter (peptide-friendly), SEPA + Paysera,
-   idempotent webhooks (mainstream processors ban this MCC)
+5. **Auth & accounts** — Auth.js, RBAC, order history, tracking, addresses
 5. **Auth & accounts** — Auth.js, RBAC, orders, tracking, addresses
 6. **Admin** — products, orders, COA upload, blog CMS
 7. **Content pages** — quality, FAQ, about, legal, shipping, blog detail

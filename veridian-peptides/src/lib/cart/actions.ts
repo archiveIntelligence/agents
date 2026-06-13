@@ -2,8 +2,10 @@
 
 import { products } from "@/lib/data";
 import { priceCart } from "./pricing";
+import { getPaymentProvider } from "@/lib/payments/registry";
+import type { PaymentInitiation, PaymentMethod } from "@/lib/payments/types";
 
-export type PaymentMethod = "sepa" | "paysera";
+export type { PaymentMethod };
 
 export interface PlaceOrderInput {
   items: { slug: string; quantity: number }[];
@@ -17,12 +19,19 @@ export interface PlaceOrderResult {
   orderId?: string;
   totalCents?: number;
   paymentMethod?: PaymentMethod;
+  payment?: PaymentInitiation;
   error?: string;
 }
 
-// Server-side validation + (mock) order creation. The price is recomputed on
-// the server from authoritative product data — never trust client totals.
-// A later milestone replaces the mock with a DB write + payment intent.
+const methodToEnum: Record<PaymentMethod, "SEPA" | "PAYSERA" | "CRYPTO"> = {
+  sepa: "SEPA",
+  paysera: "PAYSERA",
+  crypto: "CRYPTO",
+};
+
+// Server-side validation, order persistence and payment initiation.
+// The price is recomputed on the server from authoritative product data —
+// client totals are never trusted.
 export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResult> {
   if (!input.items?.length) {
     return { ok: false, error: "Your cart is empty." };
@@ -33,19 +42,8 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
   if (!input.address?.line1 || !input.address?.city || !input.address?.postalCode) {
     return { ok: false, error: "A complete shipping address is required." };
   }
-  if (input.paymentMethod !== "sepa" && input.paymentMethod !== "paysera") {
+  if (!["sepa", "paysera", "crypto"].includes(input.paymentMethod)) {
     return { ok: false, error: "Unsupported payment method." };
-  }
-
-  const lines = input.items
-    .map((i) => {
-      const product = products.find((p) => p.slug === i.slug);
-      return product ? { priceCents: product.priceCents, quantity: i.quantity } : null;
-    })
-    .filter((l): l is { priceCents: number; quantity: number } => l !== null);
-
-  if (lines.length === 0) {
-    return { ok: false, error: "No valid items in cart." };
   }
 
   const validItems = input.items
@@ -55,10 +53,18 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
     })
     .filter((x): x is { product: (typeof products)[number]; quantity: number } => x !== null);
 
-  const breakdown = priceCart(lines);
+  if (validItems.length === 0) {
+    return { ok: false, error: "No valid items in cart." };
+  }
+
+  const breakdown = priceCart(
+    validItems.map((i) => ({ priceCents: i.product.priceCents, quantity: i.quantity })),
+  );
   const reference = `VP-${Date.now().toString(36).toUpperCase()}`;
 
-  // Persist to Postgres when configured; otherwise return a mock reference.
+  let orderId: string | null = null;
+
+  // Persist to Postgres when configured.
   if (process.env.DATABASE_URL) {
     try {
       const { prisma } = await import("@/lib/db/prisma");
@@ -68,7 +74,7 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
       });
       const idBySlug = new Map(dbProducts.map((p) => [p.slug, p.id]));
 
-      await prisma.order.create({
+      const order = await prisma.order.create({
         data: {
           reference,
           email: input.contact.email,
@@ -78,7 +84,7 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
           city: input.address.city,
           postalCode: input.address.postalCode,
           country: input.address.country,
-          paymentMethod: input.paymentMethod === "sepa" ? "SEPA" : "PAYSERA",
+          paymentMethod: methodToEnum[input.paymentMethod],
           subtotalCents: breakdown.subtotalCents,
           bulkDiscountCents: breakdown.bulkDiscountCents,
           vatCents: breakdown.vatCents,
@@ -96,9 +102,37 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
           },
         },
       });
+      orderId = order.id;
     } catch (err) {
       console.error("Order persistence failed", err);
       return { ok: false, error: "We couldn't process your order. Please try again." };
+    }
+  }
+
+  // Initiate payment through the configured provider.
+  let payment: PaymentInitiation;
+  try {
+    payment = await getPaymentProvider(input.paymentMethod).createCheckout({
+      reference,
+      totalCents: breakdown.totalCents,
+      currency: "EUR",
+      email: input.contact.email,
+    });
+  } catch (err) {
+    console.error("Payment initiation failed", err);
+    return { ok: false, error: "Payment could not be started. Please try again." };
+  }
+
+  // Record the provider invoice reference for webhook reconciliation.
+  if (orderId && payment.kind === "redirect") {
+    try {
+      const { prisma } = await import("@/lib/db/prisma");
+      await prisma.order.update({
+        where: { id: orderId },
+        data: { providerRef: payment.providerRef },
+      });
+    } catch (err) {
+      console.error("Failed to store provider reference", err);
     }
   }
 
@@ -107,5 +141,6 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
     orderId: reference,
     totalCents: breakdown.totalCents,
     paymentMethod: input.paymentMethod,
+    payment,
   };
 }

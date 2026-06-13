@@ -2,22 +2,32 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart/cart-context";
 import { formatPrice } from "@/lib/format";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { OrderSummary } from "@/components/cart/order-summary";
 import { placeOrder, type PaymentMethod } from "@/lib/cart/actions";
+import type { PaymentInitiation } from "@/lib/payments/types";
 
 type Step = "details" | "payment" | "review" | "done";
 
 const EU_COUNTRIES = ["Germany", "Austria", "Netherlands", "France", "Ireland", "Romania"];
 
+function paymentLabel(method: PaymentMethod): string {
+  if (method === "sepa") return "SEPA bank transfer";
+  if (method === "paysera") return "Paysera";
+  return "Card → crypto (USDC/USDT)";
+}
+
 export default function CheckoutPage() {
   const { lines, breakdown, clear, ready } = useCart();
+  const router = useRouter();
   const [step, setStep] = useState<Step>("details");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [initiation, setInitiation] = useState<PaymentInitiation | null>(null);
 
   const [contact, setContact] = useState({ email: "", firstName: "", lastName: "" });
   const [address, setAddress] = useState({ line1: "", city: "", postalCode: "", country: "Germany" });
@@ -52,14 +62,29 @@ export default function CheckoutPage() {
       address,
       paymentMethod: payment,
     });
-    setSubmitting(false);
     if (result.ok && result.orderId) {
       setOrderId(result.orderId);
-      setStep("done");
       clear();
+
+      // Redirect-based providers (Paysera, crypto): send the customer to the
+      // hosted invoice/checkout. Internal sandbox URLs use client navigation;
+      // external URLs use a full redirect.
+      if (result.payment?.kind === "redirect") {
+        const url = result.payment.url;
+        if (url.startsWith("http")) {
+          window.location.href = url;
+          return;
+        }
+        router.push(url);
+        return;
+      }
+
+      setInitiation(result.payment ?? null);
+      setStep("done");
     } else {
       setError(result.error ?? "Something went wrong. Please try again.");
     }
+    setSubmitting(false);
   }
 
   if (step === "done" && orderId) {
@@ -76,11 +101,21 @@ export default function CheckoutPage() {
             Thank you. Your order reference is{" "}
             <span className="font-mono font-semibold">{orderId}</span>.
           </p>
-          <p className="mt-4 text-sm text-brand-700">
-            {payment === "sepa"
-              ? "We've emailed you SEPA bank-transfer instructions. Your order ships once payment is received."
-              : "You'll be redirected to Paysera to complete payment (sandbox)."}
-          </p>
+
+          {initiation?.kind === "instructions" ? (
+            <div className="mt-6 rounded-xl border border-brand-200 bg-background p-4 text-left">
+              <div className="text-sm font-semibold">{initiation.title}</div>
+              <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+                {initiation.lines.map((l) => (
+                  <li key={l} className="font-mono">{l}</li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p className="mt-4 text-sm text-brand-700">
+              Your order ships once payment is confirmed.
+            </p>
+          )}
           <div className="mt-6 flex justify-center gap-3">
             <ButtonLink href="/track">Track order</ButtonLink>
             <ButtonLink href="/products" variant="secondary">
@@ -150,6 +185,13 @@ export default function CheckoutPage() {
                   title="Paysera"
                   desc="Pay instantly via the Paysera gateway (sandbox)."
                 />
+                <PaymentOption
+                  id="crypto"
+                  selected={payment === "crypto"}
+                  onSelect={() => setPayment("crypto")}
+                  title="Card → crypto (USDC/USDT)"
+                  desc="Pay by card on the hosted invoice; we settle in stablecoin. Powered by NOWPayments (sandbox)."
+                />
               </Section>
               <div className="flex gap-3">
                 <Button variant="secondary" onClick={() => setStep("details")}>
@@ -165,7 +207,7 @@ export default function CheckoutPage() {
               <Section title="Review">
                 <ReviewRow label="Contact" value={`${contact.firstName} ${contact.lastName} · ${contact.email}`} />
                 <ReviewRow label="Ship to" value={`${address.line1}, ${address.postalCode} ${address.city}, ${address.country}`} />
-                <ReviewRow label="Payment" value={payment === "sepa" ? "SEPA bank transfer" : "Paysera"} />
+                <ReviewRow label="Payment" value={paymentLabel(payment)} />
               </Section>
               <ul className="divide-y divide-border rounded-xl border border-border text-sm">
                 {lines.map((l) => (

@@ -29,6 +29,7 @@ enum OrderStatus {
 enum PaymentMethod {
   SEPA
   PAYSERA
+  CRYPTO
 }
 
 model Category {
@@ -127,6 +128,8 @@ model Order {
   country       String
   paymentMethod PaymentMethod
   status        OrderStatus   @default(PENDING_PAYMENT)
+  // External payment provider invoice/intent id, for webhook reconciliation.
+  providerRef   String?
 
   subtotalCents     Int
   bulkDiscountCents Int
