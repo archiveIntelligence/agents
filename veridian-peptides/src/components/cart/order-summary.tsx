@@ -1,11 +1,14 @@
-import { formatPrice } from "@/lib/format";
+"use client";
+
 import {
   BULK_DISCOUNT_THRESHOLD,
   FREE_SHIPPING_THRESHOLD_CENTS,
   type PriceBreakdown,
 } from "@/lib/cart/pricing";
+import { useCurrency } from "@/components/i18n/currency-provider";
 
 export function OrderSummary({ breakdown }: { breakdown: PriceBreakdown }) {
+  const { format: formatPrice } = useCurrency();
   const {
     itemCount,
     subtotalCents,

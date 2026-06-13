@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { getBundles, getProducts } from "@/lib/repository";
-import { formatPrice } from "@/lib/format";
+import { Price } from "@/components/i18n/price";
 
 export const metadata: Metadata = {
   title: "Research Stacks",
@@ -47,17 +47,15 @@ export default async function StacksPage() {
                     <Link href={`/products/${p.slug}`} className="hover:text-brand-600">
                       {p.name}
                     </Link>
-                    <span className="text-muted-foreground">{formatPrice(p.priceCents)}</span>
+                    <Price cents={p.priceCents} className="text-muted-foreground" />
                   </li>
                 ))}
               </ul>
 
               <div className="mt-auto flex items-end justify-between pt-5">
                 <div>
-                  <span className="text-2xl font-semibold">{formatPrice(discounted)}</span>
-                  <span className="ml-2 text-sm text-muted-foreground line-through">
-                    {formatPrice(full)}
-                  </span>
+                  <Price cents={discounted} className="text-2xl font-semibold" />
+                  <Price cents={full} strike className="ml-2 text-sm" />
                 </div>
                 <ButtonLink href="/products" size="sm">
                   Shop items

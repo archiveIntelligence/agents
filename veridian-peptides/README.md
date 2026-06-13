@@ -121,9 +121,19 @@ pnpm test            # run unit tests
 docker compose up    # app + postgres
 ```
 
-## Roadmap (remaining)
+## Implemented (milestone 8 — i18n, SEO & consent)
 
-8. **i18n & multi-currency**, SEO (sitemap, JSON-LD), cookie consent banner
+- Multi-currency display (EUR/USD/GBP) via cookie + `<Price>` client islands
+- Currency switcher in the header; EUR remains the authoritative base
+- SEO: dynamic `robots.txt`, `sitemap.xml` (products, categories, blog, pages)
+- JSON-LD structured data: Organization (site-wide) + Product (PDP)
+- Cookie consent banner (essential / accept all), hydration-safe
+
+## Status
+
+All planned milestones (1–9) are complete. Remaining production tasks are
+operational: real product photography, live FX rates, real provider keys,
+and a managed Postgres instance.
 5. **Auth & accounts** — Auth.js, RBAC, orders, tracking, addresses
 6. **Admin** — products, orders, COA upload, blog CMS
 7. **Content pages** — quality, FAQ, about, legal, shipping, blog detail

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
 import { CartButton } from "@/components/layout/cart-button";
+import { CurrencySwitcher } from "@/components/i18n/currency-switcher";
 import { getCurrentUser } from "@/lib/auth/session";
 
 const nav = [
@@ -33,6 +34,9 @@ export async function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <span className="hidden sm:inline">
+            <CurrencySwitcher />
+          </span>
           <Link
             href={user ? "/account" : "/account/login"}
             className="hidden text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline"

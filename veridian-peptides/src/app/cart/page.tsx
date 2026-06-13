@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useCart } from "@/lib/cart/cart-context";
-import { formatPrice } from "@/lib/format";
+import { useCurrency } from "@/components/i18n/currency-provider";
 import { ButtonLink } from "@/components/ui/button";
 import { OrderSummary } from "@/components/cart/order-summary";
 
 export default function CartPage() {
   const { lines, breakdown, setQuantity, remove, ready } = useCart();
+  const { format: formatPrice } = useCurrency();
 
   if (ready && lines.length === 0) {
     return (

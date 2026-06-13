@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Product } from "@/lib/types";
-import { formatPrice, stockLabel } from "@/lib/format";
+import { stockLabel } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
+import { Price } from "@/components/i18n/price";
 
 const toneMap = { ok: "ok", warn: "warn", off: "off" } as const;
 
@@ -27,11 +28,9 @@ export function ProductCard({ product }: { product: Product }) {
         <p className="line-clamp-2 text-sm text-muted-foreground">{product.tagline}</p>
         <div className="mt-auto flex items-end justify-between pt-2">
           <div>
-            <span className="text-lg font-semibold">{formatPrice(product.priceCents)}</span>
+            <Price cents={product.priceCents} className="text-lg font-semibold" />
             {product.compareAtCents ? (
-              <span className="ml-2 text-sm text-muted-foreground line-through">
-                {formatPrice(product.compareAtCents)}
-              </span>
+              <Price cents={product.compareAtCents} strike className="ml-2 text-sm" />
             ) : null}
           </div>
           <span className="text-xs text-muted-foreground">{product.size}</span>

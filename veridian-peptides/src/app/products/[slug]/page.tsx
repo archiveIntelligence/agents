@@ -11,7 +11,8 @@ import {
   getRelatedProducts,
 } from "@/lib/repository";
 import { products } from "@/lib/data";
-import { formatPrice, stockLabel } from "@/lib/format";
+import { stockLabel } from "@/lib/format";
+import { Price } from "@/components/i18n/price";
 
 export async function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -50,8 +51,30 @@ export default async function ProductPage({
   const stock = stockLabel(product.stock);
   const coa = allCoas.find((c) => product.coaBatches.includes(c.batch));
 
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.tagline,
+    category: category?.name,
+    sku: product.slug,
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "EUR",
+      price: (product.priceCents / 100).toFixed(2),
+      availability:
+        product.stock === "out_of_stock"
+          ? "https://schema.org/OutOfStock"
+          : "https://schema.org/InStock",
+    },
+  };
+
   return (
     <div className="container-px py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       <nav className="mb-6 text-sm text-muted-foreground">
         <Link href="/products" className="hover:text-foreground">
           All peptides
@@ -88,11 +111,9 @@ export default async function ProductPage({
           <p className="mt-2 text-lg text-muted-foreground">{product.tagline}</p>
 
           <div className="mt-6 flex items-end gap-3">
-            <span className="text-3xl font-semibold">{formatPrice(product.priceCents)}</span>
+            <Price cents={product.priceCents} className="text-3xl font-semibold" />
             {product.compareAtCents ? (
-              <span className="pb-1 text-muted-foreground line-through">
-                {formatPrice(product.compareAtCents)}
-              </span>
+              <Price cents={product.compareAtCents} strike className="pb-1" />
             ) : null}
             <span className="pb-1 text-sm text-muted-foreground">/ {product.size}</span>
           </div>

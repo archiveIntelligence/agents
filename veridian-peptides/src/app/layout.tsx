@@ -4,6 +4,9 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { CartProvider } from "@/lib/cart/cart-context";
+import { CurrencyProvider } from "@/components/i18n/currency-provider";
+import { CookieConsent } from "@/components/layout/cookie-consent";
+import { getCurrency } from "@/lib/i18n/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +18,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = "https://veridian-peptides.test";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://veridian-peptides.test"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Veridian Peptides — Independently Tested Research Peptides",
     template: "%s · Veridian Peptides",
@@ -27,24 +32,47 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Veridian Peptides",
   },
+  alternates: { canonical: "/" },
 };
 
-export default function RootLayout({
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Veridian Peptides",
+  url: SITE_URL,
+  description:
+    "Independently HPLC-tested research peptides with a public certificate-of-analysis vault.",
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: "support@veridian-peptides.test",
+    contactType: "customer support",
+  },
+};
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const currency = await getCurrency();
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <CartProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </CartProvider>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <CurrencyProvider initial={currency}>
+          <CartProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <CookieConsent />
+          </CartProvider>
+        </CurrencyProvider>
       </body>
     </html>
   );

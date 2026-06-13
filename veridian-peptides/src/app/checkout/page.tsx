@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart/cart-context";
-import { formatPrice } from "@/lib/format";
+import { useCurrency } from "@/components/i18n/currency-provider";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { OrderSummary } from "@/components/cart/order-summary";
 import { placeOrder, type PaymentMethod } from "@/lib/cart/actions";
@@ -22,6 +22,7 @@ function paymentLabel(method: PaymentMethod): string {
 
 export default function CheckoutPage() {
   const { lines, breakdown, clear, ready } = useCart();
+  const { format: formatPrice } = useCurrency();
   const router = useRouter();
   const [step, setStep] = useState<Step>("details");
   const [submitting, setSubmitting] = useState(false);
