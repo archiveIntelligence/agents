@@ -1,0 +1,26 @@
+# Fly.io deployment. Builds the Dockerfile in this directory.
+# Set secrets with: fly secrets set DATABASE_URL=... NOWPAYMENTS_API_KEY=...
+app = "veridian-peptides"
+primary_region = "fra"
+
+[build]
+  dockerfile = "Dockerfile"
+
+# Apply database migrations on each deploy, before the new version goes live.
+[deploy]
+  release_command = "node node_modules/prisma/build/index.js migrate deploy"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3000"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

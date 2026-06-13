@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import Link from "next/link";
+import { useT } from "@/components/i18n/locale-provider";
 
 const KEY = "vp.cookie-consent";
 
@@ -21,6 +22,7 @@ const getServerSnapshot = () => "dismissed";
 
 export function CookieConsent() {
   const value = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const t = useT();
   if (value) return null;
 
   const choose = (v: "accepted" | "essential") => {
@@ -38,9 +40,9 @@ export function CookieConsent() {
       <div className="container-px">
         <div className="mx-auto flex max-w-3xl flex-col gap-3 rounded-2xl border border-border bg-surface p-5 shadow-lg sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted-foreground">
-            We use essential cookies to run this site. See our{" "}
+            {t("common.cookie.text")}{" "}
             <Link href="/legal/cookies" className="font-medium text-brand-600 hover:text-brand-700">
-              cookie settings
+              {t("common.cookie.settings")}
             </Link>
             .
           </p>
@@ -49,13 +51,13 @@ export function CookieConsent() {
               onClick={() => choose("essential")}
               className="h-9 rounded-full border border-border px-4 text-sm hover:bg-surface-muted"
             >
-              Essential only
+              {t("common.cookie.essential")}
             </button>
             <button
               onClick={() => choose("accepted")}
               className="h-9 rounded-full bg-brand-600 px-4 text-sm font-medium text-white hover:bg-brand-700"
             >
-              Accept all
+              {t("common.cookie.acceptAll")}
             </button>
           </div>
         </div>

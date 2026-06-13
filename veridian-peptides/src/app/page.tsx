@@ -9,12 +9,14 @@ import {
   getFeaturedProducts,
 } from "@/lib/repository";
 import { formatDate } from "@/lib/format";
+import { getServerT } from "@/lib/i18n/server";
 
 export default async function HomePage() {
-  const [featured, categories, posts] = await Promise.all([
+  const [featured, categories, posts, t] = await Promise.all([
     getFeaturedProducts(),
     getCategories(),
     getBlogPosts(),
+    getServerT(),
   ]);
   const avgPurity = getAveragePurity();
 
@@ -25,34 +27,32 @@ export default async function HomePage() {
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-50 via-surface to-accent-50" />
         <div className="container-px grid gap-10 py-20 lg:grid-cols-2 lg:items-center lg:py-28">
           <div>
-            <Badge tone="accent">Independently HPLC tested</Badge>
+            <Badge tone="accent">{t("home.hero.badge")}</Badge>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-              Research peptides you can{" "}
-              <span className="text-brand-600">verify</span>.
+              {t("home.hero.titleA")}{" "}
+              <span className="text-brand-600">{t("home.hero.titleHighlight")}</span>.
             </h1>
             <p className="mt-5 max-w-lg text-lg text-muted-foreground">
-              Every batch is tested by an independent laboratory and published
-              in our public COA vault. Traceable purity, transparent sourcing,
-              fast EU shipping.
+              {t("home.hero.lead")}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink href="/products" size="lg">
-                Shop all peptides
+                {t("home.hero.shopAll")}
               </ButtonLink>
               <ButtonLink href="/coa" size="lg" variant="secondary">
-                Browse COA vault
+                {t("home.hero.browseCoa")}
               </ButtonLink>
             </div>
             <p className="mt-6 text-xs text-muted-foreground">
-              For laboratory and research use only. Not for human consumption.
+              {t("home.hero.disclaimer")}
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <StatCard value={`${avgPurity}%`} label="Average tested purity" />
-            <StatCard value="33" label="Countries shipped" />
-            <StatCard value="100%" label="Batches with public COA" />
-            <StatCard value="€4.99" label="Tracked shipping from" />
+            <StatCard value={`${avgPurity}%`} label={t("home.stats.purity")} />
+            <StatCard value="33" label={t("home.stats.countries")} />
+            <StatCard value="100%" label={t("home.stats.coa")} />
+            <StatCard value="€4.99" label={t("home.stats.shipping")} />
           </div>
         </div>
       </section>
@@ -68,7 +68,7 @@ export default async function HomePage() {
 
       {/* Featured products */}
       <section className="container-px py-16">
-        <SectionHeading title="Featured research peptides" href="/products" linkLabel="View all" />
+        <SectionHeading title={t("home.featured")} href="/products" linkLabel={t("home.viewAll")} />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {featured.map((product) => (
             <ProductCard key={product.slug} product={product} />
@@ -113,7 +113,7 @@ export default async function HomePage() {
 
       {/* Categories */}
       <section className="container-px py-16">
-        <SectionHeading title="Browse by research area" href="/products" linkLabel="All categories" />
+        <SectionHeading title={t("home.categories")} href="/products" linkLabel={t("home.viewAll")} />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat) => (
             <Link
@@ -130,7 +130,7 @@ export default async function HomePage() {
 
       {/* Blog teaser */}
       <section className="container-px pb-16">
-        <SectionHeading title="From the research blog" href="/blog" linkLabel="Read more" />
+        <SectionHeading title={t("home.blog")} href="/blog" linkLabel={t("home.viewAll")} />
         <div className="grid gap-6 md:grid-cols-3">
           {posts.map((post) => (
             <Link

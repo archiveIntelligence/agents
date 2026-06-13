@@ -129,6 +129,18 @@ docker compose up    # app + postgres
 - JSON-LD structured data: Organization (site-wide) + Product (PDP)
 - Cookie consent banner (essential / accept all), hydration-safe
 
+## Internationalisation
+
+- Locale cookie (EN/DE) with server `getServerT()` + client `useT()` helpers
+- Language switcher in the header; `<html lang>` reflects the locale
+- App chrome (nav, footer, cookie banner) and the homepage are fully translated;
+  add keys in `src/lib/i18n/locale.ts` to extend coverage to deeper pages
+
+## Deployment
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md). Ready-made configs:
+`vercel.json`, `fly.toml`, `railway.json`, plus `Dockerfile` / `docker-compose.yml`.
+
 ## Status
 
 All planned milestones (1–9) are complete. Remaining production tasks are

@@ -5,8 +5,9 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { CartProvider } from "@/lib/cart/cart-context";
 import { CurrencyProvider } from "@/components/i18n/currency-provider";
+import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { CookieConsent } from "@/components/layout/cookie-consent";
-import { getCurrency } from "@/lib/i18n/server";
+import { getCurrency, getLocale } from "@/lib/i18n/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -54,10 +55,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const currency = await getCurrency();
+  const [currency, locale] = await Promise.all([getCurrency(), getLocale()]);
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
@@ -65,14 +66,16 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
-        <CurrencyProvider initial={currency}>
-          <CartProvider>
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <CookieConsent />
-          </CartProvider>
-        </CurrencyProvider>
+        <LocaleProvider initial={locale}>
+          <CurrencyProvider initial={currency}>
+            <CartProvider>
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+              <CookieConsent />
+            </CartProvider>
+          </CurrencyProvider>
+        </LocaleProvider>
       </body>
     </html>
   );

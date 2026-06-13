@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
+import { getServerT } from "@/lib/i18n/server";
 
 const columns = [
   {
     title: "Products",
+    titleKey: "footer.products",
     links: [
       { href: "/products", label: "Browse Catalog" },
       { href: "/stacks", label: "Research Stacks" },
@@ -12,6 +14,7 @@ const columns = [
   },
   {
     title: "Company",
+    titleKey: "footer.company",
     links: [
       { href: "/about", label: "About Us" },
       { href: "/contact", label: "Contact" },
@@ -21,6 +24,7 @@ const columns = [
   },
   {
     title: "Support",
+    titleKey: "footer.support",
     links: [
       { href: "/quality", label: "Quality & Testing" },
       { href: "/coa", label: "COA Vault" },
@@ -32,6 +36,7 @@ const columns = [
   },
   {
     title: "Legal",
+    titleKey: "footer.legal",
     links: [
       { href: "/legal/privacy", label: "Privacy Policy" },
       { href: "/legal/terms", label: "Terms of Service" },
@@ -40,20 +45,20 @@ const columns = [
   },
 ];
 
-export function Footer() {
+export async function Footer() {
+  const t = await getServerT();
   return (
     <footer className="mt-24 border-t border-border bg-surface">
       <div className="container-px grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-1">
           <Logo />
           <p className="mt-4 max-w-xs text-sm text-muted-foreground">
-            Independently tested research peptides. Supplied strictly for
-            laboratory research. Not for human consumption.
+            {t("footer.tagline")}
           </p>
         </div>
         {columns.map((col) => (
           <div key={col.title}>
-            <h4 className="text-sm font-semibold">{col.title}</h4>
+            <h4 className="text-sm font-semibold">{t(col.titleKey)}</h4>
             <ul className="mt-4 space-y-2">
               {col.links.map((link) => (
                 <li key={link.href}>
@@ -71,7 +76,7 @@ export function Footer() {
       </div>
       <div className="border-t border-border">
         <div className="container-px flex flex-col gap-2 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Veridian Peptides. For research use only.</p>
+          <p>© {new Date().getFullYear()} Veridian Peptides. {t("footer.rights")}</p>
           <p>support@veridian-peptides.test</p>
         </div>
       </div>
