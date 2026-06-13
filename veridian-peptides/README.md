@@ -11,8 +11,10 @@ Brand palette: **Emerald/Teal** (primary) · **Violet** (accent).
 
 - **Next.js 16** (App Router, Turbopack, React 19.2) + **TypeScript**
 - **Tailwind CSS v4** (CSS-first design tokens in `globals.css`)
+- **Prisma 7 + PostgreSQL** (node-postgres driver adapter)
 - Edge **proxy** (`src/proxy.ts`) for security headers + geo hint
-- Seed-backed **repository layer** (`src/lib/`) — swap for Prisma/Postgres later
+- **Repository layer** (`src/lib/`) — uses Postgres when `DATABASE_URL` is set,
+  falls back to the in-memory seed dataset otherwise (keeps builds green)
 
 ## Project layout
 
@@ -35,9 +37,14 @@ src/
 
 ```bash
 pnpm install
-pnpm dev      # http://localhost:3000
-pnpm build    # production build
+cp .env.example .env       # set DATABASE_URL
+pnpm db:migrate            # create schema
+pnpm db:seed               # load placeholder data
+pnpm dev                   # http://localhost:3000
+pnpm build                 # production build
 ```
+
+Without a `DATABASE_URL`, the app still runs against the in-memory seed dataset.
 
 ## Implemented (milestone 1 — foundation)
 
@@ -49,11 +56,26 @@ pnpm build    # production build
 - COA vault (searchable) + batch verification page
 - Security-header proxy/middleware
 
+## Implemented (milestone 2 — cart & checkout)
+
+- Client cart store (Context + localStorage), live header count
+- Shared pricing: bulk discount, VAT, shipping thresholds
+- Multi-step checkout (details → payment → review → confirmation)
+- SEPA + Paysera method selection
+- `placeOrder` server action with server-side validation + price recompute
+
+## Implemented (milestone 3 — persistence)
+
+- Prisma 7 schema (products, categories, COAs, bundles, blog, orders)
+- PostgreSQL via node-postgres driver adapter
+- Initial migration + idempotent seed script
+- Prisma-backed repository, auto-selected when `DATABASE_URL` is set
+- Orders persisted on checkout
+
 ## Roadmap (next milestones)
 
-2. **Persistence** — Prisma + PostgreSQL, migrations, seed script
-3. **Cart & checkout** — client cart store, multi-step checkout, tax/shipping
-4. **Payments** — Stripe + SEPA + Paysera adapters (sandbox), idempotent webhooks
+4. **Payments** — high-risk gateway adapter (peptide-friendly), SEPA + Paysera,
+   idempotent webhooks (mainstream processors ban this MCC)
 5. **Auth & accounts** — Auth.js, RBAC, orders, tracking, addresses
 6. **Admin** — products, orders, COA upload, blog CMS
 7. **Content pages** — quality, FAQ, about, legal, shipping, blog detail

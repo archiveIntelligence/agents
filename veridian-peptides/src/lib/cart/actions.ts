@@ -48,14 +48,63 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
     return { ok: false, error: "No valid items in cart." };
   }
 
-  const breakdown = priceCart(lines);
+  const validItems = input.items
+    .map((i) => {
+      const product = products.find((p) => p.slug === i.slug);
+      return product ? { product, quantity: i.quantity } : null;
+    })
+    .filter((x): x is { product: (typeof products)[number]; quantity: number } => x !== null);
 
-  // Mock persistence — generate a human-friendly order reference.
-  const orderId = `VP-${Date.now().toString(36).toUpperCase()}`;
+  const breakdown = priceCart(lines);
+  const reference = `VP-${Date.now().toString(36).toUpperCase()}`;
+
+  // Persist to Postgres when configured; otherwise return a mock reference.
+  if (process.env.DATABASE_URL) {
+    try {
+      const { prisma } = await import("@/lib/db/prisma");
+      const dbProducts = await prisma.product.findMany({
+        where: { slug: { in: validItems.map((i) => i.product.slug) } },
+        select: { id: true, slug: true },
+      });
+      const idBySlug = new Map(dbProducts.map((p) => [p.slug, p.id]));
+
+      await prisma.order.create({
+        data: {
+          reference,
+          email: input.contact.email,
+          firstName: input.contact.firstName,
+          lastName: input.contact.lastName,
+          addressLine1: input.address.line1,
+          city: input.address.city,
+          postalCode: input.address.postalCode,
+          country: input.address.country,
+          paymentMethod: input.paymentMethod === "sepa" ? "SEPA" : "PAYSERA",
+          subtotalCents: breakdown.subtotalCents,
+          bulkDiscountCents: breakdown.bulkDiscountCents,
+          vatCents: breakdown.vatCents,
+          shippingCents: breakdown.shippingCents,
+          totalCents: breakdown.totalCents,
+          items: {
+            create: validItems
+              .filter((i) => idBySlug.has(i.product.slug))
+              .map((i) => ({
+                productId: idBySlug.get(i.product.slug)!,
+                productName: i.product.name,
+                unitPriceCents: i.product.priceCents,
+                quantity: i.quantity,
+              })),
+          },
+        },
+      });
+    } catch (err) {
+      console.error("Order persistence failed", err);
+      return { ok: false, error: "We couldn't process your order. Please try again." };
+    }
+  }
 
   return {
     ok: true,
-    orderId,
+    orderId: reference,
     totalCents: breakdown.totalCents,
     paymentMethod: input.paymentMethod,
   };
