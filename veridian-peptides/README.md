@@ -91,9 +91,20 @@ Without a `DATABASE_URL`, the app still runs against the in-memory seed dataset.
 - Authorised order tracking (`/track`) — owner or matching email
 - Header reflects auth state; `requireAdmin` helper for the backoffice
 
+## Implemented (milestone 6 — admin panel)
+
+- RBAC-gated `/admin` (ADMIN role only; CUSTOMER/guests redirected)
+- Dashboard KPIs: paid revenue, orders, pending, products, customers
+- Product management (price, stock, purity, featured, copy) with revalidation
+- Order management with status transitions
+- COA management (add certificates) and blog CMS (publish posts)
+- Seeded admin account (`ADMIN_EMAIL` / `ADMIN_PASSWORD`)
+
 ## Roadmap (next milestones)
 
-6. **Admin panel** — products, orders, COA upload, blog CMS (RBAC-gated)
+7. **Content & legal pages** — quality, FAQ, about, shipping, blog detail, legal
+8. **i18n & multi-currency**, SEO (sitemap, JSON-LD), cookie consent
+9. **Testing & CI/CD** — Vitest, Playwright, GitHub Actions, Docker
 5. **Auth & accounts** — Auth.js, RBAC, orders, tracking, addresses
 6. **Admin** — products, orders, COA upload, blog CMS
 7. **Content pages** — quality, FAQ, about, legal, shipping, blog detail

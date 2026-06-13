@@ -1,4 +1,5 @@
 import "dotenv/config";
+import bcrypt from "bcryptjs";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, StockStatus } from "../src/generated/prisma/client";
 import {
@@ -103,9 +104,25 @@ async function main() {
     });
   }
 
+  // Seed an admin account (idempotent). Override the password via ADMIN_PASSWORD.
+  const adminEmail = process.env.ADMIN_EMAIL ?? "admin@veridian-peptides.test";
+  const adminPassword = process.env.ADMIN_PASSWORD ?? "admin12345";
+  await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: { role: "ADMIN" },
+    create: {
+      email: adminEmail,
+      passwordHash: await bcrypt.hash(adminPassword, 12),
+      firstName: "Site",
+      lastName: "Admin",
+      role: "ADMIN",
+    },
+  });
+
   console.log(
     `Seeded ${categories.length} categories, ${products.length} products, ${coas.length} COAs, ${bundles.length} bundles, ${blogPosts.length} posts.`,
   );
+  console.log(`Admin: ${adminEmail} / ${adminPassword}`);
 }
 
 main()
