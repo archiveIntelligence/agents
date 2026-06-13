@@ -112,6 +112,11 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
   return blogPosts;
 }
 
+export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
+  if (useDb) return (await db()).getBlogPost(slug);
+  return blogPosts.find((p) => p.slug === slug);
+}
+
 export function getAveragePurity(): number {
   return AVERAGE_PURITY;
 }

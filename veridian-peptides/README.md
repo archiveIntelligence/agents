@@ -100,9 +100,17 @@ Without a `DATABASE_URL`, the app still runs against the in-memory seed dataset.
 - COA management (add certificates) and blog CMS (publish posts)
 - Seeded admin account (`ADMIN_EMAIL` / `ADMIN_PASSWORD`)
 
+## Implemented (milestone 7 — content & legal)
+
+- Quality & Testing, FAQ, About, Contact, Shipping & Returns, Security
+- Wholesale + Affiliate enquiry pages
+- Research Stacks (bundles with computed savings)
+- Blog index + post detail (CMS body, excerpt fallback)
+- Legal: Privacy, Terms, Cookie settings (templates)
+- Reusable content shell; every header/footer link now resolves
+
 ## Roadmap (next milestones)
 
-7. **Content & legal pages** — quality, FAQ, about, shipping, blog detail, legal
 8. **i18n & multi-currency**, SEO (sitemap, JSON-LD), cookie consent
 9. **Testing & CI/CD** — Vitest, Playwright, GitHub Actions, Docker
 5. **Auth & accounts** — Auth.js, RBAC, orders, tracking, addresses

@@ -60,6 +60,8 @@ export interface BlogPost {
   slug: string;
   title: string;
   excerpt: string;
+  /** Long-form body (CMS-managed). Optional in the seed dataset. */
+  body?: string;
   category: string;
   publishedOn: string;
   readingMinutes: number;

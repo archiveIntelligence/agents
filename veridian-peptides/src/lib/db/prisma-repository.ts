@@ -168,14 +168,32 @@ export async function verifyCoa(batch: string): Promise<Coa | undefined> {
     : undefined;
 }
 
-export async function getBlogPosts(): Promise<BlogPost[]> {
-  const rows = await prisma.blogPost.findMany({ orderBy: { publishedOn: "desc" } });
-  return rows.map((p) => ({
+function toBlogPost(p: {
+  slug: string;
+  title: string;
+  excerpt: string;
+  body: string;
+  category: string;
+  publishedOn: Date;
+  readingMinutes: number;
+}): BlogPost {
+  return {
     slug: p.slug,
     title: p.title,
     excerpt: p.excerpt,
+    body: p.body,
     category: p.category,
     publishedOn: p.publishedOn.toISOString(),
     readingMinutes: p.readingMinutes,
-  }));
+  };
+}
+
+export async function getBlogPosts(): Promise<BlogPost[]> {
+  const rows = await prisma.blogPost.findMany({ orderBy: { publishedOn: "desc" } });
+  return rows.map(toBlogPost);
+}
+
+export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
+  const p = await prisma.blogPost.findUnique({ where: { slug } });
+  return p ? toBlogPost(p) : undefined;
 }
