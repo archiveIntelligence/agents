@@ -43,7 +43,8 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
   if (!input.address?.line1 || !input.address?.city || !input.address?.postalCode) {
     return { ok: false, error: "A complete shipping address is required." };
   }
-  if (!["sepa", "paysera", "crypto"].includes(input.paymentMethod)) {
+  // Card → crypto (USDC/USDT) settlement is the only supported method.
+  if (input.paymentMethod !== "crypto") {
     return { ok: false, error: "Unsupported payment method." };
   }
 

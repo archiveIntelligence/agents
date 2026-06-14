@@ -33,7 +33,8 @@ export default function CheckoutPage() {
 
   const [contact, setContact] = useState({ email: "", firstName: "", lastName: "" });
   const [address, setAddress] = useState({ line1: "", city: "", postalCode: "", country: "Germany" });
-  const [payment, setPayment] = useState<PaymentMethod>("sepa");
+  // Card → crypto (USDC/USDT) via our crypto gateway is the only payment method.
+  const [payment] = useState<PaymentMethod>("crypto");
 
   if (ready && lines.length === 0 && step !== "done") {
     return (
@@ -174,23 +175,14 @@ export default function CheckoutPage() {
             <div className="space-y-6">
               <Section title="Payment method">
                 <PaymentOption
-                  selected={payment === "sepa"}
-                  onSelect={() => setPayment("sepa")}
-                  title="SEPA bank transfer"
-                  desc="Pay by EU bank transfer. Instructions sent by email; ships once received."
-                />
-                <PaymentOption
-                  selected={payment === "paysera"}
-                  onSelect={() => setPayment("paysera")}
-                  title="Paysera"
-                  desc="Pay instantly via the Paysera gateway (sandbox)."
-                />
-                <PaymentOption
-                  selected={payment === "crypto"}
-                  onSelect={() => setPayment("crypto")}
+                  selected
                   title="Card → crypto (USDC/USDT)"
-                  desc="Pay by card on the hosted invoice; we settle in stablecoin. Powered by NOWPayments (sandbox)."
+                  desc="Pay by card on the hosted invoice; we settle in stablecoin (USDC/USDT) via our crypto gateway. Powered by NOWPayments."
                 />
+                <p className="text-xs text-muted-foreground">
+                  Card payment that settles to us in stablecoin is the only payment
+                  method available at checkout.
+                </p>
               </Section>
               <div className="flex gap-3">
                 <Button variant="secondary" onClick={() => setStep("details")}>
@@ -323,7 +315,7 @@ function PaymentOption({
   desc,
 }: {
   selected: boolean;
-  onSelect: () => void;
+  onSelect?: () => void;
   title: string;
   desc: string;
 }) {
@@ -331,9 +323,10 @@ function PaymentOption({
     <button
       type="button"
       onClick={onSelect}
+      disabled={!onSelect}
       className={`flex w-full items-start gap-3 rounded-xl border p-4 text-left transition-all duration-200 ${
         selected ? "border-brand-700 bg-brand-50 shadow-soft" : "border-border hover:border-brand-300 hover:bg-surface-muted"
-      }`}
+      } ${onSelect ? "" : "cursor-default"}`}
     >
       <span
         className={`mt-0.5 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full border-2 ${
