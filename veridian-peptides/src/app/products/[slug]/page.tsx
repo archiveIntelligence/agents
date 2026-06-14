@@ -4,10 +4,12 @@ import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { AddToCart } from "@/components/product/add-to-cart";
 import { ProductCard } from "@/components/product/product-card";
+import { VialImage } from "@/components/product/vial-image";
 import {
   getCategory,
   getCoas,
   getProduct,
+  getProducts,
   getRelatedProducts,
 } from "@/lib/repository";
 import { products } from "@/lib/data";
@@ -44,11 +46,26 @@ export default async function ProductPage({
   const product = await getProduct(slug);
   if (!product) notFound();
 
-  const [category, related, allCoas] = await Promise.all([
+  const [category, relatedRaw, allCoas, allProducts] = await Promise.all([
     getCategory(product.categorySlug),
     getRelatedProducts(product),
     getCoas(),
+    getProducts({}),
   ]);
+
+  // Size variants of this product share the same name; offer them as a selector.
+  const siblings = allProducts
+    .filter((p) => p.name === product.name)
+    .sort((a, b) => a.priceCents - b.priceCents);
+
+  // "You may also like": one card per other product group, excluding this one.
+  const relatedByName = new Map<string, (typeof relatedRaw)[number]>();
+  for (const p of relatedRaw) {
+    if (p.name === product.name) continue;
+    if (!relatedByName.has(p.name)) relatedByName.set(p.name, p);
+  }
+  const related = [...relatedByName.values()].slice(0, 3);
+
   const stock = stockLabel(product.stock);
   const coa = allCoas.find((c) => product.coaBatches.includes(c.batch));
   const savePct = discountPercent(product.priceCents, product.compareAtCents);
@@ -97,14 +114,11 @@ export default async function ProductPage({
 
       <div className="grid gap-10 lg:grid-cols-2">
         {/* Visual */}
-        <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-brand-50 via-surface to-ink-100 shadow-soft">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(13,111,80,0.10),transparent_60%)]" />
-          <svg width="120" height="120" viewBox="0 0 64 64" fill="none" aria-hidden="true" className="relative drop-shadow-sm">
-            <rect x="24" y="6" width="16" height="6" rx="2" fill="var(--color-brand-700)" />
-            <path d="M26 12h12v36a6 6 0 0 1-12 0V12Z" fill="white" stroke="var(--color-brand-700)" strokeWidth="2" />
-            <path d="M26 32h12v16a6 6 0 0 1-12 0V32Z" fill="var(--color-brand-300)" />
-          </svg>
-        </div>
+        <VialImage
+          name={product.name}
+          size={product.size}
+          className="aspect-square rounded-2xl border border-border shadow-soft"
+        />
 
         {/* Details */}
         <div>
@@ -132,6 +146,32 @@ export default async function ProductPage({
             <p className="mt-1.5 text-sm text-muted-foreground">
               <Price cents={perMgCents} className="font-medium text-foreground" /> per mg
             </p>
+          ) : null}
+
+          {/* Size variant selector */}
+          {siblings.length > 1 ? (
+            <div className="mt-6">
+              <span className="eyebrow">Size</span>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {siblings.map((s) => {
+                  const active = s.slug === product.slug;
+                  return (
+                    <Link
+                      key={s.slug}
+                      href={`/products/${s.slug}`}
+                      aria-current={active ? "true" : undefined}
+                      className={`rounded-xl border px-4 py-2 text-sm transition-all ${
+                        active
+                          ? "border-brand-700 bg-brand-50 font-semibold text-brand-800 shadow-soft"
+                          : "border-border text-foreground hover:border-brand-300 hover:bg-surface-muted"
+                      }`}
+                    >
+                      {s.size}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
           ) : null}
 
           {/* Honest urgency — driven by the real stock status, no invented counts */}

@@ -1,4 +1,4 @@
-import type { Bundle, BlogPost, Category, Coa, Product } from "./types";
+import type { Bundle, BlogPost, Category, Coa, Product, StockStatus } from "./types";
 
 // Seed dataset — original placeholder content. Compound names are generic
 // research-chemical identifiers (not brand-owned). Descriptions are written
@@ -8,7 +8,7 @@ export const categories: Category[] = [
   {
     slug: "metabolic",
     name: "Metabolic Research",
-    description: "Incretin and metabolic-pathway research compounds.",
+    description: "Incretin and metabolic-pathway research compounds (GLP-1/GIP/glucagon, amylin).",
   },
   {
     slug: "recovery",
@@ -22,8 +22,8 @@ export const categories: Category[] = [
   },
   {
     slug: "neuro",
-    name: "Neuro Research",
-    description: "Neuropeptides used in cognitive and behavioural studies.",
+    name: "Neuro & Cognitive",
+    description: "Nootropic and neuro-research peptides used in cognitive and behavioural studies.",
   },
   {
     slug: "growth",
@@ -33,222 +33,393 @@ export const categories: Category[] = [
   {
     slug: "lab-supplies",
     name: "Lab Supplies",
-    description: "Bacteriostatic water, syringes and reconstitution kits.",
+    description: "Bacteriostatic water, sterile water and reconstitution supplies.",
   },
 ];
 
-export const products: Product[] = [
+// ---------------------------------------------------------------------------
+// Curated catalogue. Each entry is a product "group" that expands into one
+// purchasable Product per size variant. Prices are EUR cents, benchmarked to
+// Western research-peptide retail. Compounds are supplied for laboratory
+// research use only.
+// ---------------------------------------------------------------------------
+
+type SizeRow = [size: string, priceCents: number, compareAtCents: number | null, stock?: StockStatus];
+
+interface GroupDef {
+  base: string;
+  name: string;
+  category: string;
+  tagline: string;
+  description: string;
+  purity: number;
+  featured?: boolean;
+  coaBatch?: string;
+  testedOn?: string;
+  specs?: { label: string; value: string }[];
+  sizes: SizeRow[];
+}
+
+const PEPTIDE_SPECS = [
+  { label: "Molecular form", value: "Lyophilised powder" },
+  { label: "Storage", value: "-20 °C, desiccated" },
+  { label: "Reconstitution", value: "Bacteriostatic water" },
+];
+
+const catalog: GroupDef[] = [
+  // ---- Metabolic ----
   {
-    slug: "vp-glp-001",
-    name: "VP-GLP-001",
-    tagline: "Incretin pathway research peptide",
+    base: "tirzepatide",
+    name: "Tirzepatide",
+    category: "metabolic",
+    tagline: "Dual GIP/GLP-1 receptor agonist",
     description:
-      "A lyophilised research peptide studied in metabolic and incretin-signalling models. Supplied for in-vitro and laboratory research use only.",
-    categorySlug: "metabolic",
-    priceCents: 8900,
-    compareAtCents: 10900,
-    size: "5mg",
-    purity: 99.4,
-    stock: "in_stock",
-    coaBatches: ["VP24-GLP-7781"],
-    featured: true,
-    specs: [
-      { label: "Molecular form", value: "Lyophilised powder" },
-      { label: "Storage", value: "-20 °C, desiccated" },
-      { label: "Reconstitution", value: "Bacteriostatic water" },
-    ],
-  },
-  {
-    slug: "vp-glp-002",
-    name: "VP-GLP-002",
-    tagline: "Dual-agonist metabolic research compound",
-    description:
-      "Dual-receptor research peptide investigated in metabolic-regulation assays. For laboratory research purposes only.",
-    categorySlug: "metabolic",
-    priceCents: 12900,
-    size: "10mg",
-    purity: 99.1,
-    stock: "in_stock",
-    coaBatches: ["VP24-GLP-7782"],
-    featured: true,
-    specs: [
-      { label: "Molecular form", value: "Lyophilised powder" },
-      { label: "Storage", value: "-20 °C, desiccated" },
-      { label: "Reconstitution", value: "Bacteriostatic water" },
-    ],
-  },
-  {
-    slug: "vp-rec-157",
-    name: "VP-REC-157",
-    tagline: "Cytoprotective recovery research peptide",
-    description:
-      "Pentadecapeptide studied in tissue-repair and gut-barrier research models. Supplied for research use only.",
-    categorySlug: "recovery",
-    priceCents: 5900,
-    size: "10mg",
-    purity: 99.6,
-    stock: "in_stock",
-    coaBatches: ["VP24-REC-3310"],
-    featured: true,
-    specs: [
-      { label: "Molecular form", value: "Lyophilised powder" },
-      { label: "Storage", value: "-20 °C, desiccated" },
-      { label: "Reconstitution", value: "Bacteriostatic water" },
-    ],
-  },
-  {
-    slug: "vp-rec-500",
-    name: "VP-REC-500",
-    tagline: "Actin-binding recovery research peptide",
-    description:
-      "Synthetic fragment investigated in angiogenesis and recovery research. For laboratory use only.",
-    categorySlug: "recovery",
-    priceCents: 6900,
-    size: "5mg",
-    purity: 98.9,
-    stock: "low_stock",
-    coaBatches: ["VP24-REC-3311"],
-    specs: [
-      { label: "Molecular form", value: "Lyophilised powder" },
-      { label: "Storage", value: "-20 °C, desiccated" },
-      { label: "Reconstitution", value: "Bacteriostatic water" },
-    ],
-  },
-  {
-    slug: "vp-cell-ghk",
-    name: "VP-CELL-GHK",
-    tagline: "Copper-complex cellular research peptide",
-    description:
-      "Copper tripeptide complex studied in skin-model and cellular-signalling research. Research use only.",
-    categorySlug: "cellular",
-    priceCents: 4900,
-    size: "50mg",
-    purity: 99.3,
-    stock: "in_stock",
-    coaBatches: ["VP24-CEL-2204"],
-    featured: true,
-    specs: [
-      { label: "Molecular form", value: "Lyophilised powder" },
-      { label: "Storage", value: "-20 °C, desiccated" },
-      { label: "Reconstitution", value: "Bacteriostatic water" },
-    ],
-  },
-  {
-    slug: "vp-cell-epi",
-    name: "VP-CELL-EPI",
-    tagline: "Telomere & longevity research peptide",
-    description:
-      "Tetrapeptide investigated in longevity and circadian-regulation research models. Research use only.",
-    categorySlug: "cellular",
-    priceCents: 5400,
-    size: "20mg",
-    purity: 99.0,
-    stock: "in_stock",
-    coaBatches: ["VP24-CEL-2205"],
-    specs: [
-      { label: "Molecular form", value: "Lyophilised powder" },
-      { label: "Storage", value: "-20 °C, desiccated" },
-      { label: "Reconstitution", value: "Bacteriostatic water" },
-    ],
-  },
-  {
-    slug: "vp-neuro-slk",
-    name: "VP-NEURO-SLK",
-    tagline: "Anxiolytic neuropeptide (research)",
-    description:
-      "Heptapeptide studied in anxiolytic and cognitive research assays. For laboratory research only.",
-    categorySlug: "neuro",
-    priceCents: 4400,
-    size: "10mg",
-    purity: 98.7,
-    stock: "in_stock",
-    coaBatches: ["VP24-NEU-1190"],
-    specs: [
-      { label: "Molecular form", value: "Lyophilised powder" },
-      { label: "Storage", value: "-20 °C, desiccated" },
-      { label: "Reconstitution", value: "Bacteriostatic water" },
-    ],
-  },
-  {
-    slug: "vp-growth-ipa",
-    name: "VP-GROWTH-IPA",
-    tagline: "Selective secretagogue research peptide",
-    description:
-      "Selective growth-hormone secretagogue studied in endocrine research models. Research use only.",
-    categorySlug: "growth",
-    priceCents: 4700,
-    size: "5mg",
+      "Dual-incretin (GIP and GLP-1) research peptide and the benchmark molecule for next-generation metabolic studies. Lyophilised; for laboratory research use only.",
     purity: 99.2,
-    stock: "pre_order",
-    coaBatches: ["VP24-GRW-8821"],
+    featured: true,
+    coaBatch: "VP-TIRZ-2601",
+    testedOn: "2026-05-18",
+    sizes: [
+      ["5mg", 8000, 9900],
+      ["10mg", 13000, 15900],
+      ["15mg", 17500, 21000],
+      ["20mg", 21000, 25000],
+      ["30mg", 28000, 33000],
+      ["40mg", 34000, 40000],
+      ["60mg", 45000, 53000],
+    ],
+  },
+  {
+    base: "retatrutide",
+    name: "Retatrutide",
+    category: "metabolic",
+    tagline: "Triple GIP/GLP-1/glucagon agonist",
+    description:
+      "Triple-receptor agonist and the most closely watched molecule in the current metabolic pipeline. Lyophilised; for laboratory research use only.",
+    purity: 99.0,
+    featured: true,
+    coaBatch: "VP-RETA-2602",
+    testedOn: "2026-05-20",
+    sizes: [
+      ["5mg", 9000, 11000],
+      ["10mg", 14000, 17000],
+      ["15mg", 18500, 22000],
+      ["20mg", 22000, 26000],
+      ["30mg", 29000, 34000],
+    ],
+  },
+  {
+    base: "semaglutide",
+    name: "Semaglutide",
+    category: "metabolic",
+    tagline: "GLP-1 receptor agonist (reference compound)",
+    description:
+      "The established single-receptor GLP-1 agonist, widely used as a comparator in metabolic research. Lyophilised; for laboratory research use only.",
+    purity: 99.3,
+    coaBatch: "VP-SEMA-2603",
+    testedOn: "2026-05-10",
+    sizes: [
+      ["5mg", 7000, 8800],
+      ["10mg", 11000, 13500],
+    ],
+  },
+  {
+    base: "cagrilintide",
+    name: "Cagrilintide",
+    category: "metabolic",
+    tagline: "Long-acting amylin analogue",
+    description:
+      "Amylin-class research peptide, central to combination metabolic research. Lyophilised; for laboratory research use only.",
+    purity: 98.8,
+    coaBatch: "VP-CAGR-2604",
+    testedOn: "2026-05-12",
+    sizes: [
+      ["5mg", 9500, 11500],
+      ["10mg", 15000, 18000],
+    ],
+  },
+
+  // ---- Tissue & Recovery ----
+  {
+    base: "bpc-157",
+    name: "BPC-157",
+    category: "recovery",
+    tagline: "Body-protection compound, repair research",
+    description:
+      "The most-discussed peptide in tissue-repair research, studied in angiogenesis and connective-tissue models. Lyophilised; for laboratory research use only.",
+    purity: 99.5,
+    featured: true,
+    coaBatch: "VP-BPC-2605",
+    testedOn: "2026-04-28",
+    sizes: [
+      ["5mg", 4500, 5500],
+      ["10mg", 7000, 8500],
+    ],
+  },
+  {
+    base: "tb-500",
+    name: "TB-500",
+    category: "recovery",
+    tagline: "Thymosin β4 fragment, cell-migration research",
+    description:
+      "Synthetic active fragment associated with thymosin beta-4, studied in cell-migration and wound-model research. Lyophilised; for laboratory research use only.",
+    purity: 99.1,
+    coaBatch: "VP-TB5-2606",
+    testedOn: "2026-04-28",
+    sizes: [
+      ["5mg", 5500, 6800],
+      ["10mg", 9000, 11000],
+    ],
+  },
+  {
+    base: "glow-blend",
+    name: "GLOW Blend (BPC-157 / TB-500 / GHK-Cu)",
+    category: "recovery",
+    tagline: "Combination tissue-repair research blend",
+    description:
+      "A combination research blend pairing BPC-157 and TB-500 with the copper peptide GHK-Cu for repair-model studies. Lyophilised; for laboratory research use only.",
+    purity: 98.6,
+    featured: true,
+    coaBatch: "VP-GLOW-2607",
+    testedOn: "2026-04-15",
+    sizes: [["70mg", 14000, 17000]],
+  },
+  {
+    base: "klow-blend",
+    name: "KLOW Blend (BPC-157 / TB-500 / GHK-Cu / KPV)",
+    category: "recovery",
+    tagline: "Four-component repair research blend",
+    description:
+      "An extended combination blend adding KPV to the GLOW formulation for tissue-repair and inflammation research models. Lyophilised; for laboratory research use only.",
+    purity: 98.4,
+    coaBatch: "VP-KLOW-2608",
+    testedOn: "2026-04-15",
+    sizes: [["80mg", 15000, 18000]],
+  },
+
+  // ---- Cellular & Longevity ----
+  {
+    base: "ghk-cu",
+    name: "GHK-Cu (Copper Peptide)",
+    category: "cellular",
+    tagline: "Copper tripeptide, matrix & skin research",
+    description:
+      "The most-studied copper peptide, a glycyl-histidyl-lysine tripeptide complexed with copper(II) — hence its blue colour. Studied in extracellular-matrix research. For laboratory research use only.",
+    purity: 99.3,
+    featured: true,
+    coaBatch: "VP-GHK-2609",
+    testedOn: "2026-03-30",
     specs: [
-      { label: "Molecular form", value: "Lyophilised powder" },
-      { label: "Storage", value: "-20 °C, desiccated" },
+      { label: "Molecular form", value: "Lyophilised powder (copper(II) complex)" },
+      { label: "Appearance", value: "Blue (coordinated copper)" },
+      { label: "Storage", value: "-20 °C, protect from light" },
       { label: "Reconstitution", value: "Bacteriostatic water" },
     ],
+    sizes: [
+      ["50mg", 7000, 8500],
+      ["100mg", 12000, 14500],
+    ],
   },
   {
-    slug: "vp-supply-bacwater",
+    base: "mots-c",
+    name: "MOTS-c",
+    category: "cellular",
+    tagline: "Mitochondrial-derived peptide",
+    description:
+      "Mitochondrial-derived research peptide studied in metabolic and cellular-energy models. Lyophilised; for laboratory research use only.",
+    purity: 99.0,
+    coaBatch: "VP-MOTS-2610",
+    testedOn: "2026-03-22",
+    sizes: [
+      ["10mg", 6000, 7500],
+      ["40mg", 19000, 23000],
+    ],
+  },
+  {
+    base: "nad-plus",
+    name: "NAD+",
+    category: "cellular",
+    tagline: "Cellular-energy & longevity research",
+    description:
+      "Nicotinamide adenine dinucleotide for cellular-energy and longevity research models. Lyophilised; for laboratory research use only.",
+    purity: 98.9,
+    coaBatch: "VP-NAD-2611",
+    testedOn: "2026-03-18",
+    sizes: [
+      ["100mg", 5500, 6800],
+      ["500mg", 11000, 13500],
+    ],
+  },
+  {
+    base: "epithalon",
+    name: "Epithalon",
+    category: "cellular",
+    tagline: "Telomerase & longevity research peptide",
+    description:
+      "Tetrapeptide studied in telomere and longevity research models. Lyophilised; for laboratory research use only.",
+    purity: 99.1,
+    coaBatch: "VP-EPI-2612",
+    testedOn: "2026-03-10",
+    sizes: [
+      ["10mg", 5000, 6200],
+      ["50mg", 12000, 14500],
+    ],
+  },
+
+  // ---- Growth Factors ----
+  {
+    base: "cjc-ipamorelin",
+    name: "CJC-1295 + Ipamorelin",
+    category: "growth",
+    tagline: "GH-secretagogue research blend",
+    description:
+      "A popular research blend of CJC-1295 (no DAC) and Ipamorelin, studied together in growth-hormone-axis models. Lyophilised; for laboratory research use only.",
+    purity: 99.2,
+    featured: true,
+    coaBatch: "VP-CJC-2613",
+    testedOn: "2026-02-26",
+    sizes: [["10mg", 6000, 7500]],
+  },
+  {
+    base: "tesamorelin",
+    name: "Tesamorelin",
+    category: "growth",
+    tagline: "GHRH analogue research peptide",
+    description:
+      "Growth-hormone-releasing-hormone analogue studied in metabolic and growth-axis research. Lyophilised; for laboratory research use only.",
+    purity: 99.0,
+    coaBatch: "VP-TESA-2614",
+    testedOn: "2026-02-20",
+    sizes: [
+      ["5mg", 6000, 7400],
+      ["10mg", 9500, 11500],
+      ["20mg", 16000, 19000],
+    ],
+  },
+
+  // ---- Neuro & Cognitive ----
+  {
+    base: "selank",
+    name: "Selank",
+    category: "neuro",
+    tagline: "Anxiolytic nootropic research peptide",
+    description:
+      "Synthetic analogue of tuftsin, studied in anxiolytic and cognitive research models. Lyophilised; for laboratory research use only.",
+    purity: 98.8,
+    featured: true,
+    coaBatch: "VP-SLK-2615",
+    testedOn: "2026-02-12",
+    sizes: [
+      ["5mg", 4000, 5000],
+      ["10mg", 6500, 8000],
+    ],
+  },
+  {
+    base: "semax",
+    name: "Semax",
+    category: "neuro",
+    tagline: "Nootropic & neuroprotective research peptide",
+    description:
+      "ACTH(4-10) analogue studied in nootropic, neuroprotective and BDNF-related research models. Lyophilised; for laboratory research use only.",
+    purity: 98.9,
+    coaBatch: "VP-SMX-2616",
+    testedOn: "2026-02-12",
+    sizes: [
+      ["5mg", 4500, 5500],
+      ["10mg", 7000, 8600],
+    ],
+  },
+  {
+    base: "dsip",
+    name: "DSIP",
+    category: "neuro",
+    tagline: "Delta sleep-inducing peptide",
+    description:
+      "Delta sleep-inducing peptide, studied in sleep-architecture and neuro-endocrine research models. Lyophilised; for laboratory research use only.",
+    purity: 99.0,
+    coaBatch: "VP-DSIP-2617",
+    testedOn: "2026-02-05",
+    sizes: [
+      ["5mg", 4000, 5000],
+      ["10mg", 6000, 7400],
+    ],
+  },
+
+  // ---- Lab Supplies ----
+  {
+    base: "bacteriostatic-water",
     name: "Bacteriostatic Water",
-    tagline: "0.9% benzyl-alcohol reconstitution solvent",
+    category: "lab-supplies",
+    tagline: "0.9% benzyl alcohol — multi-draw reconstitution",
     description:
-      "Sterile bacteriostatic water for reconstitution of lyophilised research peptides. 30 ml vial.",
-    categorySlug: "lab-supplies",
-    priceCents: 1200,
-    size: "30ml",
+      "Bacteriostatic water for reconstituting lyophilised research peptides across repeated draws. For laboratory use.",
     purity: 100,
-    stock: "in_stock",
-    coaBatches: [],
-    specs: [
-      { label: "Volume", value: "30 ml" },
-      { label: "Composition", value: "0.9% benzyl alcohol" },
-    ],
+    specs: [{ label: "Volume", value: "30 ml" }, { label: "Preservative", value: "0.9% benzyl alcohol" }],
+    sizes: [["30ml", 1200, null]],
   },
   {
-    slug: "vp-supply-kit",
-    name: "Reconstitution Kit",
-    tagline: "Syringes, alcohol pads & mixing vials",
+    base: "sterile-water",
+    name: "Sterile Water",
+    category: "lab-supplies",
+    tagline: "Preservative-free reconstitution water",
     description:
-      "Complete reconstitution kit including insulin syringes, alcohol prep pads and sterile mixing vials.",
-    categorySlug: "lab-supplies",
-    priceCents: 1900,
-    size: "1 kit",
+      "Preservative-free sterile water for single-use reconstitution. For laboratory use.",
     purity: 100,
-    stock: "in_stock",
-    coaBatches: [],
-    specs: [
-      { label: "Contents", value: "10× syringes, 20× pads, 2× vials" },
-    ],
+    specs: [{ label: "Volume", value: "30 ml" }, { label: "Preservative", value: "None" }],
+    sizes: [["30ml", 1000, null]],
   },
 ];
+
+function variantSlug(base: string, size: string): string {
+  return `${base}-${size.toLowerCase().replace(/\s+/g, "")}`;
+}
+
+export const products: Product[] = catalog.flatMap((g) =>
+  g.sizes.map(([size, priceCents, compareAtCents, stock], i) => ({
+    slug: variantSlug(g.base, size),
+    name: g.name,
+    tagline: g.tagline,
+    description: g.description,
+    categorySlug: g.category,
+    priceCents,
+    compareAtCents: compareAtCents ?? undefined,
+    size,
+    purity: g.purity,
+    stock: stock ?? "in_stock",
+    coaBatches: g.coaBatch ? [g.coaBatch] : [],
+    featured: g.featured && i === 0 ? true : undefined,
+    specs: g.specs ?? PEPTIDE_SPECS,
+  })),
+);
 
 export const bundles: Bundle[] = [
   {
     slug: "metabolic-starter",
     name: "Metabolic Research Starter",
-    description: "Core metabolic compounds plus reconstitution supplies.",
-    productSlugs: ["vp-glp-001", "vp-supply-bacwater", "vp-supply-kit"],
+    description: "A core metabolic compound plus reconstitution water to get a study running.",
+    productSlugs: ["tirzepatide-5mg", "bacteriostatic-water-30ml"],
     savingsPercent: 12,
   },
   {
     slug: "recovery-stack",
     name: "Recovery Research Stack",
-    description: "Paired recovery peptides for repair-model studies.",
-    productSlugs: ["vp-rec-157", "vp-rec-500"],
+    description: "BPC-157 and TB-500 paired for tissue-repair model studies.",
+    productSlugs: ["bpc-157-5mg", "tb-500-5mg"],
     savingsPercent: 10,
   },
 ];
 
-export const coas: Coa[] = [
-  { batch: "VP24-GLP-7781", productSlug: "vp-glp-001", productName: "VP-GLP-001", testedOn: "2026-04-12", purity: 99.4, lab: "Independent HPLC Lab", verifyUrl: "https://verify.example-lab.test/VP24-GLP-7781" },
-  { batch: "VP24-GLP-7782", productSlug: "vp-glp-002", productName: "VP-GLP-002", testedOn: "2026-04-12", purity: 99.1, lab: "Independent HPLC Lab", verifyUrl: "https://verify.example-lab.test/VP24-GLP-7782" },
-  { batch: "VP24-REC-3310", productSlug: "vp-rec-157", productName: "VP-REC-157", testedOn: "2026-03-29", purity: 99.6, lab: "Independent HPLC Lab", verifyUrl: "https://verify.example-lab.test/VP24-REC-3310" },
-  { batch: "VP24-REC-3311", productSlug: "vp-rec-500", productName: "VP-REC-500", testedOn: "2026-03-29", purity: 98.9, lab: "Independent HPLC Lab", verifyUrl: "https://verify.example-lab.test/VP24-REC-3311" },
-  { batch: "VP24-CEL-2204", productSlug: "vp-cell-ghk", productName: "VP-CELL-GHK", testedOn: "2026-02-18", purity: 99.3, lab: "Independent HPLC Lab", verifyUrl: "https://verify.example-lab.test/VP24-CEL-2204" },
-  { batch: "VP24-CEL-2205", productSlug: "vp-cell-epi", productName: "VP-CELL-EPI", testedOn: "2026-02-18", purity: 99.0, lab: "Independent HPLC Lab", verifyUrl: "https://verify.example-lab.test/VP24-CEL-2205" },
-  { batch: "VP24-NEU-1190", productSlug: "vp-neuro-slk", productName: "VP-NEURO-SLK", testedOn: "2026-01-30", purity: 98.7, lab: "Independent HPLC Lab", verifyUrl: "https://verify.example-lab.test/VP24-NEU-1190" },
-  { batch: "VP24-GRW-8821", productSlug: "vp-growth-ipa", productName: "VP-GROWTH-IPA", testedOn: "2026-01-15", purity: 99.2, lab: "Independent HPLC Lab", verifyUrl: "https://verify.example-lab.test/VP24-GRW-8821" },
-];
+export const coas: Coa[] = catalog
+  .filter((g) => g.coaBatch)
+  .map((g) => ({
+    batch: g.coaBatch!,
+    productSlug: variantSlug(g.base, g.sizes[0][0]),
+    productName: g.name,
+    testedOn: g.testedOn ?? "2026-05-01",
+    purity: g.purity,
+    lab: "Independent HPLC Lab",
+    verifyUrl: `https://verify.example-lab.test/${g.coaBatch}`,
+  }));
 
 export const blogPosts: BlogPost[] = [
   {

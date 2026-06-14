@@ -23,7 +23,7 @@ export default async function ProductsPage({
   const sp = await searchParams;
   const sort = (sortOptions.find((o) => o.value === sp.sort)?.value ?? "featured") as ProductQuery["sort"];
 
-  const [categories, results] = await Promise.all([
+  const [categories, allResults] = await Promise.all([
     getCategories(),
     getProducts({
       category: sp.category,
@@ -32,6 +32,21 @@ export default async function ProductsPage({
       sort,
     }),
   ]);
+
+  // Products come as one row per size variant; collapse to one card per group
+  // (by name), keeping the cheapest variant as the representative and counting
+  // how many sizes are available.
+  const groupsByName = new Map<string, { rep: (typeof allResults)[number]; count: number }>();
+  for (const p of allResults) {
+    const existing = groupsByName.get(p.name);
+    if (!existing) {
+      groupsByName.set(p.name, { rep: p, count: 1 });
+    } else {
+      existing.count += 1;
+      if (p.priceCents < existing.rep.priceCents) existing.rep = p;
+    }
+  }
+  const results = [...groupsByName.values()];
 
   const buildHref = (overrides: Record<string, string | undefined>) => {
     const params = new URLSearchParams();
@@ -112,8 +127,8 @@ export default async function ProductsPage({
             </p>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {results.map((product) => (
-                <ProductCard key={product.slug} product={product} />
+              {results.map(({ rep, count }) => (
+                <ProductCard key={rep.name} product={rep} sizeCount={count} />
               ))}
             </div>
           )}
