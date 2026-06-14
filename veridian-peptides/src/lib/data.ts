@@ -8,32 +8,32 @@ export const categories: Category[] = [
   {
     slug: "metabolic",
     name: "Metabolic Research",
-    description: "Incretin and metabolic-pathway research compounds (GLP-1/GIP/glucagon, amylin).",
+    description: "Incretin and metabolic-pathway compounds — GLP-1, GIP, glucagon and amylin agonists for metabolic studies.",
   },
   {
     slug: "recovery",
-    name: "Tissue & Recovery",
-    description: "Compounds studied for regeneration and repair models.",
+    name: "Recovery & Repair Research",
+    description: "Peptides studied in regeneration, tissue-repair and wound-healing models.",
   },
   {
     slug: "cellular",
-    name: "Cellular & Longevity",
-    description: "Mitochondrial, copper and longevity research peptides.",
+    name: "Cellular & Longevity Research",
+    description: "Mitochondrial, copper and longevity peptides for cellular-ageing research.",
   },
   {
     slug: "neuro",
-    name: "Neuro & Cognitive",
-    description: "Nootropic and neuro-research peptides used in cognitive and behavioural studies.",
+    name: "Neuro & Cognitive Research",
+    description: "Nootropic and neuroprotective peptides used in cognitive and behavioural studies.",
   },
   {
     slug: "growth",
-    name: "Growth Factors",
-    description: "Growth-hormone secretagogue research compounds.",
+    name: "Growth-Factor Research",
+    description: "Growth-hormone secretagogues and growth-factor compounds for endocrine research.",
   },
   {
     slug: "lab-supplies",
     name: "Lab Supplies",
-    description: "Bacteriostatic water, sterile water and reconstitution supplies.",
+    description: "Bacteriostatic water, sterile water and reconstitution consumables for the lab bench.",
   },
 ];
 
@@ -137,6 +137,91 @@ const catalog: GroupDef[] = [
       ["5mg", 9500, 11500],
       ["10mg", 15000, 18000],
     ],
+  },
+  {
+    base: "survodutide",
+    name: "Survodutide",
+    category: "metabolic",
+    tagline: "Dual GLP-1/glucagon receptor agonist",
+    description:
+      "Dual GLP-1 and glucagon receptor agonist, prominent in 2026 metabolic and MASH (metabolic dysfunction-associated steatohepatitis) research models. Lyophilised; for laboratory research use only.",
+    purity: 99.0,
+    coaBatch: "VP-SURV-2618",
+    testedOn: "2026-05-22",
+    sizes: [
+      ["5mg", 9500, 11500],
+      ["10mg", 15000, 18500],
+      ["15mg", 20000, 24000],
+    ],
+  },
+  {
+    base: "mazdutide",
+    name: "Mazdutide",
+    category: "metabolic",
+    tagline: "Dual GLP-1/glucagon receptor agonist",
+    description:
+      "GLP-1 and glucagon receptor co-agonist studied alongside the incretin class in metabolic and energy-expenditure research models. Lyophilised; for laboratory research use only.",
+    purity: 98.9,
+    coaBatch: "VP-MAZD-2619",
+    testedOn: "2026-05-22",
+    sizes: [
+      ["5mg", 9000, 11000],
+      ["10mg", 14500, 17500],
+    ],
+  },
+  {
+    base: "aod-9604",
+    name: "AOD-9604",
+    category: "metabolic",
+    tagline: "hGH(176-191) fragment, lipid-metabolism research",
+    description:
+      "Modified C-terminal fragment of human growth hormone (residues 176-191) studied in lipolysis and lipid-metabolism research models without the growth-promoting activity of the full hormone. Lyophilised; for laboratory research use only.",
+    purity: 98.7,
+    coaBatch: "VP-AOD-2620",
+    testedOn: "2026-05-16",
+    sizes: [
+      ["5mg", 4000, 5000],
+      ["10mg", 6500, 8000],
+    ],
+  },
+  {
+    base: "5-amino-1mq",
+    name: "5-Amino-1MQ",
+    category: "metabolic",
+    tagline: "Small-molecule NNMT inhibitor",
+    description:
+      "Small-molecule inhibitor of nicotinamide N-methyltransferase (NNMT) studied in adipocyte-metabolism and NAD+ salvage research models. Supplied as powder for laboratory research use only.",
+    purity: 98.5,
+    coaBatch: "VP-5A1MQ-2621",
+    testedOn: "2026-05-14",
+    sizes: [["50mg", 5500, 6800]],
+  },
+  {
+    base: "tesofensine",
+    name: "Tesofensine",
+    category: "metabolic",
+    tagline: "Triple monoamine-reuptake inhibitor",
+    description:
+      "Small-molecule serotonin-, noradrenaline- and dopamine-reuptake inhibitor studied in CNS appetite-regulation and energy-balance research models. Supplied as powder for laboratory research use only.",
+    purity: 98.6,
+    coaBatch: "VP-TESO-2622",
+    testedOn: "2026-05-14",
+    sizes: [
+      ["5mg", 6000, 7400],
+      ["10mg", 9500, 11500],
+    ],
+  },
+  {
+    base: "adipotide",
+    name: "Adipotide (FTPP)",
+    category: "metabolic",
+    tagline: "Pro-apoptotic adipose-vasculature peptide",
+    description:
+      "Pro-apoptotic peptidomimetic (FTPP) studied for its targeting of adipose-tissue vasculature in metabolic research models. Lyophilised; for laboratory research use only.",
+    purity: 98.4,
+    coaBatch: "VP-ADPT-2627",
+    testedOn: "2026-05-08",
+    sizes: [["10mg", 9000, 11000]],
   },
 
   // ---- Tissue & Recovery ----
@@ -265,6 +350,36 @@ const catalog: GroupDef[] = [
       ["50mg", 12000, 14500],
     ],
   },
+  {
+    base: "slu-pp-332",
+    name: "SLU-PP-332",
+    category: "cellular",
+    tagline: "ERRα agonist, exercise-mimetic research",
+    description:
+      "Small-molecule estrogen-related-receptor-alpha (ERRα) agonist studied as an exercise mimetic in mitochondrial-biogenesis and oxidative-metabolism research models. Supplied as powder for laboratory research use only.",
+    purity: 98.5,
+    coaBatch: "VP-SLU-2623",
+    testedOn: "2026-05-06",
+    sizes: [
+      ["10mg", 8500, 10500],
+      ["25mg", 17000, 20000],
+    ],
+  },
+  {
+    base: "ss-31",
+    name: "SS-31 (Elamipretide)",
+    category: "cellular",
+    tagline: "Mitochondria-targeted cardiolipin peptide",
+    description:
+      "Mitochondria-targeted tetrapeptide (Elamipretide) that associates with cardiolipin on the inner mitochondrial membrane, studied in bioenergetics and oxidative-stress research models. Lyophilised; for laboratory research use only.",
+    purity: 99.0,
+    coaBatch: "VP-SS31-2624",
+    testedOn: "2026-05-06",
+    sizes: [
+      ["10mg", 7500, 9200],
+      ["50mg", 18000, 22000],
+    ],
+  },
 
   // ---- Growth Factors ----
   {
@@ -294,6 +409,36 @@ const catalog: GroupDef[] = [
       ["5mg", 6000, 7400],
       ["10mg", 9500, 11500],
       ["20mg", 16000, 19000],
+    ],
+  },
+  {
+    base: "sermorelin",
+    name: "Sermorelin",
+    category: "growth",
+    tagline: "GHRH(1-29) analogue research peptide",
+    description:
+      "Truncated growth-hormone-releasing-hormone analogue (GHRH 1-29) studied in growth-hormone-axis and pulsatile-secretion research models. Lyophilised; for laboratory research use only.",
+    purity: 98.9,
+    coaBatch: "VP-SERM-2625",
+    testedOn: "2026-02-26",
+    sizes: [
+      ["5mg", 4500, 5500],
+      ["10mg", 7000, 8500],
+    ],
+  },
+  {
+    base: "ipamorelin",
+    name: "Ipamorelin",
+    category: "growth",
+    tagline: "Selective GH-secretagogue research peptide",
+    description:
+      "Selective ghrelin-receptor agonist and growth-hormone secretagogue studied on its own for its targeted GH-release profile in growth-axis research models. Lyophilised; for laboratory research use only.",
+    purity: 99.1,
+    coaBatch: "VP-IPAM-2626",
+    testedOn: "2026-02-26",
+    sizes: [
+      ["5mg", 4000, 5000],
+      ["10mg", 6500, 8000],
     ],
   },
 
@@ -392,19 +537,115 @@ export const products: Product[] = catalog.flatMap((g) =>
   })),
 );
 
+// Curated research stacks. Each groups real catalogue variant slugs around one
+// research theme; `savingsPercent` is the honest discount versus buying the
+// listed variants individually (the stacks page derives every figure from it).
+// The page reads the theme heading from the first compound's category, so the
+// order here is for readability only. All compounds are for laboratory use.
 export const bundles: Bundle[] = [
+  // ---- Metabolic ----
   {
     slug: "metabolic-starter",
     name: "Metabolic Research Starter",
-    description: "A core metabolic compound plus reconstitution water to get a study running.",
+    description:
+      "A single dual-incretin compound plus bacteriostatic water — the minimum to begin a GIP/GLP-1 metabolic study without sourcing reconstitution supplies separately.",
     productSlugs: ["tirzepatide-5mg", "bacteriostatic-water-30ml"],
     savingsPercent: 12,
   },
   {
+    slug: "dual-incretin-amylin",
+    name: "Incretin + Amylin Research Stack",
+    description:
+      "Pairs the dual GIP/GLP-1 agonist tirzepatide with the long-acting amylin analogue cagrilintide — the incretin-plus-amylin combination that defines current metabolic research — with reconstitution water included.",
+    productSlugs: ["tirzepatide-10mg", "cagrilintide-5mg", "bacteriostatic-water-30ml"],
+    savingsPercent: 13,
+  },
+  {
+    slug: "triple-agonist-comparator",
+    name: "Triple-Agonist Comparator Research Stack",
+    description:
+      "The triple GIP/GLP-1/glucagon agonist retatrutide alongside semaglutide as a single-receptor GLP-1 reference, for comparator study designs across mechanisms. Includes bacteriostatic water.",
+    productSlugs: ["retatrutide-10mg", "semaglutide-5mg", "bacteriostatic-water-30ml"],
+    savingsPercent: 10,
+  },
+
+  // ---- Recovery & Repair ----
+  {
     slug: "recovery-stack",
     name: "Recovery Research Stack",
-    description: "BPC-157 and TB-500 paired for tissue-repair model studies.",
+    description:
+      "BPC-157 and TB-500 paired for tissue-repair model studies — two compounds proposed to act through distinct angiogenesis and cell-migration pathways.",
     productSlugs: ["bpc-157-5mg", "tb-500-5mg"],
+    savingsPercent: 10,
+  },
+  {
+    slug: "tissue-repair-trio",
+    name: "Tissue-Repair Research Trio",
+    description:
+      "The classic GLOW-style repair combination as discrete vials: BPC-157, TB-500 and the copper tripeptide GHK-Cu, so each component can be dosed and assayed independently in repair-model work.",
+    productSlugs: ["bpc-157-10mg", "tb-500-10mg", "ghk-cu-50mg"],
+    savingsPercent: 14,
+  },
+  {
+    slug: "wound-matrix",
+    name: "Wound & Matrix Research Stack",
+    description:
+      "TB-500 for cell-migration models with GHK-Cu for extracellular-matrix and connective-tissue studies, plus bacteriostatic water for reconstitution.",
+    productSlugs: ["tb-500-5mg", "ghk-cu-50mg", "bacteriostatic-water-30ml"],
+    savingsPercent: 9,
+  },
+
+  // ---- Cellular & Longevity ----
+  {
+    slug: "cellular-longevity",
+    name: "Cellular Longevity Research Stack",
+    description:
+      "Three pillars of longevity research in one set: NAD+ for cellular energy metabolism, the telomere-associated tetrapeptide epithalon, and the mitochondrial-derived peptide MOTS-c.",
+    productSlugs: ["nad-plus-100mg", "epithalon-10mg", "mots-c-10mg"],
+    savingsPercent: 13,
+  },
+  {
+    slug: "mitochondrial-energy",
+    name: "Mitochondrial Energy Research Stack",
+    description:
+      "MOTS-c and NAD+ together for cellular-energy and mitochondrial-function models, with bacteriostatic water included for reconstitution.",
+    productSlugs: ["mots-c-10mg", "nad-plus-100mg", "bacteriostatic-water-30ml"],
+    savingsPercent: 9,
+  },
+
+  // ---- Neuro & Cognitive ----
+  {
+    slug: "neuro-nootropic",
+    name: "Neuro Nootropic Research Stack",
+    description:
+      "The two most-referenced nootropic peptides — the ACTH(4-10) analogue Semax and the tuftsin analogue Selank — for cognitive and anxiolytic behavioural research models.",
+    productSlugs: ["semax-10mg", "selank-10mg"],
+    savingsPercent: 11,
+  },
+  {
+    slug: "sleep-neuro",
+    name: "Sleep & Neuro Research Stack",
+    description:
+      "Delta sleep-inducing peptide (DSIP) with Selank for sleep-architecture and neuro-endocrine study designs, plus bacteriostatic water for reconstitution.",
+    productSlugs: ["dsip-5mg", "selank-5mg", "bacteriostatic-water-30ml"],
+    savingsPercent: 10,
+  },
+
+  // ---- Growth-Factor / GH-Axis ----
+  {
+    slug: "gh-axis-secretagogue",
+    name: "GH-Axis Secretagogue Research Stack",
+    description:
+      "Combines the CJC-1295 + Ipamorelin secretagogue blend with the GHRH analogue tesamorelin to study complementary points on the growth-hormone axis, with reconstitution water included.",
+    productSlugs: ["cjc-ipamorelin-10mg", "tesamorelin-5mg", "bacteriostatic-water-30ml"],
+    savingsPercent: 12,
+  },
+  {
+    slug: "gh-recovery",
+    name: "GH & Recovery Research Stack",
+    description:
+      "The CJC-1295 + Ipamorelin growth-hormone-secretagogue blend paired with BPC-157, for study designs that examine GH-axis signalling alongside tissue-repair models.",
+    productSlugs: ["cjc-ipamorelin-10mg", "bpc-157-5mg"],
     savingsPercent: 10,
   },
 ];

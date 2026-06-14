@@ -2,13 +2,15 @@ import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
 import { getServerT } from "@/lib/i18n/server";
 
-const columns = [
+type FooterLink = { href: string; label: string; labelKey?: string };
+
+const columns: { title: string; titleKey: string; links: FooterLink[] }[] = [
   {
     title: "Products",
     titleKey: "footer.products",
     links: [
-      { href: "/products", label: "Browse Catalog" },
-      { href: "/stacks", label: "Research Stacks" },
+      { href: "/products", label: "Browse Catalog", labelKey: "nav.allPeptides" },
+      { href: "/stacks", label: "Research Stacks", labelKey: "nav.stacks" },
       { href: "/wholesale", label: "Wholesale" },
     ],
   },
@@ -26,8 +28,8 @@ const columns = [
     title: "Support",
     titleKey: "footer.support",
     links: [
-      { href: "/quality", label: "Quality & Testing" },
-      { href: "/coa", label: "COA Vault" },
+      { href: "/quality", label: "Quality & Testing", labelKey: "nav.quality" },
+      { href: "/coa", label: "COA Vault", labelKey: "nav.coa" },
       { href: "/coa/verify", label: "Verify COA" },
       { href: "/faq", label: "FAQ" },
       { href: "/shipping", label: "Shipping & Returns" },
@@ -66,7 +68,7 @@ export async function Footer() {
                     href={link.href}
                     className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    {link.label}
+                    {link.labelKey ? t(link.labelKey) : link.label}
                   </Link>
                 </li>
               ))}

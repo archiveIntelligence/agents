@@ -20,7 +20,7 @@ export function isLocale(value: unknown): value is Locale {
 type Messages = Record<string, string>;
 
 const en: Messages = {
-  "nav.allPeptides": "All Peptides",
+  "nav.allPeptides": "All Research Peptides",
   "nav.stacks": "Research Stacks",
   "nav.quality": "Quality & Testing",
   "nav.coa": "COA Vault",
@@ -59,7 +59,7 @@ const en: Messages = {
 };
 
 const de: Messages = {
-  "nav.allPeptides": "Alle Peptide",
+  "nav.allPeptides": "Alle Research-Peptide",
   "nav.stacks": "Research-Stacks",
   "nav.quality": "Qualität & Tests",
   "nav.coa": "COA-Archiv",
