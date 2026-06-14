@@ -97,6 +97,7 @@ async function main() {
         slug: post.slug,
         title: post.title,
         excerpt: post.excerpt,
+        body: post.body ?? "",
         category: post.category,
         publishedOn: new Date(post.publishedOn),
         readingMinutes: post.readingMinutes,

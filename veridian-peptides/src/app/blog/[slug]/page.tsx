@@ -26,9 +26,8 @@ export default async function BlogPostPage({
   if (!post) notFound();
 
   // Seed posts may have no long-form body; fall back to the excerpt.
-  const paragraphs = (post.body && post.body.trim().length > 0 ? post.body : post.excerpt)
-    .split(/\n{2,}/)
-    .filter(Boolean);
+  const source =
+    post.body && post.body.trim().length > 0 ? post.body : post.excerpt;
 
   return (
     <article className="container-px py-14">
@@ -36,23 +35,55 @@ export default async function BlogPostPage({
         <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground">
           ← Research blog
         </Link>
-        <header className="mt-4 mb-8">
+        <header className="mt-4 mb-10">
           <Badge tone="brand">{post.category}</Badge>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight">{post.title}</h1>
-          <p className="mt-3 text-sm text-muted-foreground">
+          <h1 className="mt-4 text-4xl tracking-tight sm:text-5xl">{post.title}</h1>
+          <p className="mt-4 text-sm text-muted-foreground">
             {formatDate(post.publishedOn)} · {post.readingMinutes} min read
           </p>
         </header>
-        <div className="space-y-4 text-muted-foreground">
-          {paragraphs.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
+        <div className="space-y-5 text-[1.05rem] leading-relaxed text-muted-foreground">
+          {renderBlocks(source)}
         </div>
-        <p className="mt-10 text-xs text-muted-foreground">
+        <p className="mt-12 rounded-xl border border-border bg-surface-muted p-4 text-xs leading-relaxed text-muted-foreground">
           This article is general research information and not medical advice.
-          Products are for laboratory research use only.
+          The compounds discussed are supplied strictly for laboratory and
+          research use only and are not for human consumption.
         </p>
       </div>
     </article>
   );
+}
+
+// Minimal markdown-ish renderer: ## / ### headings, "- " bullet lists and
+// paragraphs. Keeps article bodies authorable as plain text in the dataset.
+function renderBlocks(source: string) {
+  const chunks = source.split(/\n{2,}/).map((c) => c.trim()).filter(Boolean);
+  return chunks.map((chunk, i) => {
+    if (chunk.startsWith("### ")) {
+      return (
+        <h3 key={i} className="pt-2 text-xl tracking-tight text-foreground">
+          {chunk.slice(4)}
+        </h3>
+      );
+    }
+    if (chunk.startsWith("## ")) {
+      return (
+        <h2 key={i} className="pt-4 text-2xl tracking-tight text-foreground">
+          {chunk.slice(3)}
+        </h2>
+      );
+    }
+    if (/^- /m.test(chunk)) {
+      const items = chunk.split(/\n/).filter((l) => l.startsWith("- "));
+      return (
+        <ul key={i} className="list-disc space-y-1.5 pl-5">
+          {items.map((it, j) => (
+            <li key={j}>{it.slice(2)}</li>
+          ))}
+        </ul>
+      );
+    }
+    return <p key={i}>{chunk}</p>;
+  });
 }
