@@ -8,7 +8,7 @@ export function CartButton({ label = "Cart" }: { label?: string }) {
   return (
     <Link
       href="/cart"
-      className="relative inline-flex h-9 items-center gap-2 rounded-full bg-brand-600 px-4 text-sm font-medium text-white transition-colors hover:bg-brand-700"
+      className="relative inline-flex h-9 items-center gap-2 rounded-full bg-brand-700 px-4 text-sm font-medium text-white transition-colors hover:bg-brand-700"
     >
       {label}
       {ready && count > 0 ? (

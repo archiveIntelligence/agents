@@ -46,7 +46,7 @@ export default async function TrackPage({
               className="h-11 w-full rounded-lg border border-border bg-surface px-3 text-sm focus-visible:outline-2 focus-visible:outline-ring"
             />
           ) : null}
-          <button className="h-11 w-full rounded-full bg-brand-600 px-6 text-sm font-medium text-white hover:bg-brand-700">
+          <button className="h-11 w-full rounded-full bg-brand-700 px-6 text-sm font-medium text-white hover:bg-brand-700">
             Track order
           </button>
         </form>

@@ -34,7 +34,7 @@ export default async function VerifyPage({
             placeholder="e.g. VP24-GLP-7781"
             className="h-11 flex-1 rounded-full border border-border bg-surface px-4 font-mono text-sm focus-visible:outline-2 focus-visible:outline-ring"
           />
-          <button className="h-11 rounded-full bg-brand-600 px-6 text-sm font-medium text-white hover:bg-brand-700">
+          <button className="h-11 rounded-full bg-brand-700 px-6 text-sm font-medium text-white hover:bg-brand-700">
             Verify
           </button>
         </form>
@@ -43,7 +43,7 @@ export default async function VerifyPage({
           result ? (
             <div className="mt-8 rounded-2xl border border-brand-200 bg-brand-50 p-6">
               <div className="flex items-center gap-2">
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white">
+                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand-700 text-xs font-bold text-white">
                   ✓
                 </span>
                 <span className="font-semibold text-brand-800">Batch verified</span>

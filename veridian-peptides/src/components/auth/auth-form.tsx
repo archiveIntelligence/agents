@@ -36,7 +36,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       <button
         type="submit"
         disabled={pending}
-        className="h-11 w-full rounded-full bg-brand-600 px-6 text-sm font-medium text-white transition-colors hover:bg-brand-700 disabled:opacity-50"
+        className="h-12 w-full rounded-full bg-brand-700 px-6 text-sm font-medium text-white shadow-soft transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-800 hover:shadow-lift disabled:opacity-50"
       >
         {pending ? "Please wait…" : mode === "login" ? "Sign in" : "Create account"}
       </button>
@@ -45,14 +45,14 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         {mode === "login" ? (
           <>
             No account?{" "}
-            <Link href="/account/register" className="font-medium text-brand-600 hover:text-brand-700">
+            <Link href="/account/register" className="font-medium text-brand-700 hover:text-brand-800">
               Create one
             </Link>
           </>
         ) : (
           <>
             Already registered?{" "}
-            <Link href="/account/login" className="font-medium text-brand-600 hover:text-brand-700">
+            <Link href="/account/login" className="font-medium text-brand-700 hover:text-brand-800">
               Sign in
             </Link>
           </>
@@ -77,13 +77,13 @@ function Input({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm text-muted-foreground">{label}</span>
+      <span className="mb-1.5 block text-sm font-medium text-foreground">{label}</span>
       <input
         name={name}
         type={type}
         autoComplete={autoComplete}
         required={required}
-        className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm focus-visible:outline-2 focus-visible:outline-ring"
+        className="h-12 w-full rounded-xl border border-border bg-surface px-3.5 text-sm shadow-soft transition-colors focus-visible:border-brand-400 focus-visible:outline-2 focus-visible:outline-ring"
       />
     </label>
   );

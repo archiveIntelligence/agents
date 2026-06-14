@@ -1,5 +1,24 @@
 // Locale-aware formatting helpers.
 
+/** Discount percentage vs. a list price, or null when there is no real saving. */
+export function discountPercent(priceCents: number, compareAtCents?: number): number | null {
+  if (!compareAtCents || compareAtCents <= priceCents) return null;
+  return Math.round((1 - priceCents / compareAtCents) * 100);
+}
+
+/** Parse a milligram size like "10mg" → 10. Returns null for non-mg sizes. */
+export function parseMg(size: string): number | null {
+  const m = /^([\d.]+)\s*mg$/i.exec(size.trim());
+  return m ? parseFloat(m[1]) : null;
+}
+
+/** Unit price per milligram in cents, for honest price-per-mg framing. */
+export function pricePerMgCents(priceCents: number, size: string): number | null {
+  const mg = parseMg(size);
+  if (!mg || mg <= 0) return null;
+  return priceCents / mg;
+}
+
 export function formatPrice(cents: number, locale = "en-IE"): string {
   return new Intl.NumberFormat(locale, {
     style: "currency",

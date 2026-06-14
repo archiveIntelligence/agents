@@ -11,8 +11,9 @@ import {
   getRelatedProducts,
 } from "@/lib/repository";
 import { products } from "@/lib/data";
-import { stockLabel } from "@/lib/format";
+import { stockLabel, discountPercent, pricePerMgCents } from "@/lib/format";
 import { Price } from "@/components/i18n/price";
+import { BULK_DISCOUNT_THRESHOLD, BULK_DISCOUNT_RATE } from "@/lib/cart/pricing";
 
 export async function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -50,6 +51,9 @@ export default async function ProductPage({
   ]);
   const stock = stockLabel(product.stock);
   const coa = allCoas.find((c) => product.coaBatches.includes(c.batch));
+  const savePct = discountPercent(product.priceCents, product.compareAtCents);
+  const perMgCents = pricePerMgCents(product.priceCents, product.size);
+  const bulkUnitPriceCents = Math.round(product.priceCents * (1 - BULK_DISCOUNT_RATE));
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -93,10 +97,11 @@ export default async function ProductPage({
 
       <div className="grid gap-10 lg:grid-cols-2">
         {/* Visual */}
-        <div className="flex aspect-square items-center justify-center rounded-2xl border border-border bg-gradient-to-br from-brand-50 to-accent-50">
-          <svg width="120" height="120" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-            <rect x="24" y="6" width="16" height="6" rx="2" fill="var(--color-brand-600)" />
-            <path d="M26 12h12v36a6 6 0 0 1-12 0V12Z" fill="white" stroke="var(--color-brand-600)" strokeWidth="2" />
+        <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-brand-50 via-surface to-ink-100 shadow-soft">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(13,111,80,0.10),transparent_60%)]" />
+          <svg width="120" height="120" viewBox="0 0 64 64" fill="none" aria-hidden="true" className="relative drop-shadow-sm">
+            <rect x="24" y="6" width="16" height="6" rx="2" fill="var(--color-brand-700)" />
+            <path d="M26 12h12v36a6 6 0 0 1-12 0V12Z" fill="white" stroke="var(--color-brand-700)" strokeWidth="2" />
             <path d="M26 32h12v16a6 6 0 0 1-12 0V32Z" fill="var(--color-brand-300)" />
           </svg>
         </div>
@@ -107,16 +112,39 @@ export default async function ProductPage({
             <Badge tone="brand">{product.purity}% purity</Badge>
             <Badge tone={toneMap[stock.tone]}>{stock.text}</Badge>
           </div>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight">{product.name}</h1>
-          <p className="mt-2 text-lg text-muted-foreground">{product.tagline}</p>
+          <h1 className="mt-4 text-4xl tracking-tight">{product.name}</h1>
+          <p className="mt-3 text-lg leading-relaxed text-muted-foreground">{product.tagline}</p>
 
-          <div className="mt-6 flex items-end gap-3">
-            <Price cents={product.priceCents} className="text-3xl font-semibold" />
+          <div className="mt-6 flex flex-wrap items-end gap-3">
+            <Price cents={product.priceCents} className="font-display text-4xl text-foreground" />
             {product.compareAtCents ? (
-              <Price cents={product.compareAtCents} strike className="pb-1" />
+              <Price cents={product.compareAtCents} strike className="pb-1.5" />
             ) : null}
-            <span className="pb-1 text-sm text-muted-foreground">/ {product.size}</span>
+            <span className="pb-1.5 text-sm text-muted-foreground">/ {product.size}</span>
+            {savePct ? (
+              <span className="mb-1 inline-flex items-center rounded-full bg-brand-700 px-2.5 py-0.5 text-xs font-semibold text-white">
+                Save {savePct}%
+              </span>
+            ) : null}
           </div>
+
+          {perMgCents ? (
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              <Price cents={perMgCents} className="font-medium text-foreground" /> per mg
+            </p>
+          ) : null}
+
+          {/* Honest urgency — driven by the real stock status, no invented counts */}
+          {product.stock === "low_stock" ? (
+            <p className="mt-4 flex items-center gap-2 text-sm font-medium text-gold-600">
+              <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-gold-500" />
+              Low stock — this batch is selling quickly
+            </p>
+          ) : product.stock === "pre_order" ? (
+            <p className="mt-4 text-sm font-medium text-gold-600">
+              Pre-order now — reserve your unit from the next tested batch
+            </p>
+          ) : null}
 
           <div className="mt-6">
             <AddToCart
@@ -126,18 +154,39 @@ export default async function ProductPage({
             />
           </div>
 
-          <p className="mt-4 rounded-lg bg-surface-muted p-3 text-xs text-muted-foreground">
-            Bulk discount: buy 3 or more units and save 5% automatically at checkout.
-          </p>
-
-          <div className="mt-8">
-            <h2 className="text-sm font-semibold">Description</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{product.description}</p>
+          {/* Bulk anchoring — the per-unit price drops at the real 3-unit threshold */}
+          <div className="mt-4 flex items-center justify-between rounded-xl border border-gold-200 bg-gold-100/50 p-3.5 text-sm">
+            <span className="text-ink-700">
+              Buy {BULK_DISCOUNT_THRESHOLD}+ units —{" "}
+              <span className="font-semibold">save {Math.round(BULK_DISCOUNT_RATE * 100)}%</span>
+            </span>
+            <span className="text-muted-foreground">
+              <Price cents={bulkUnitPriceCents} className="font-semibold text-brand-700" /> / unit
+            </span>
           </div>
 
-          <div className="mt-8">
-            <h2 className="text-sm font-semibold">Specifications</h2>
-            <dl className="mt-3 divide-y divide-border rounded-xl border border-border">
+          {/* Authority / risk-reversal row */}
+          <ul className="mt-6 grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
+            {[
+              "Independent HPLC purity report",
+              "Public certificate of analysis",
+              "Tracked EU shipping",
+              "Discreet, temperature-aware dispatch",
+            ].map((item) => (
+              <li key={item} className="flex items-center gap-2 text-muted-foreground">
+                <CheckMark /> {item}
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-10">
+            <h2 className="eyebrow">Description</h2>
+            <p className="mt-3 leading-relaxed text-muted-foreground">{product.description}</p>
+          </div>
+
+          <div className="mt-10">
+            <h2 className="eyebrow">Specifications</h2>
+            <dl className="mt-3 divide-y divide-border rounded-xl border border-border bg-surface shadow-soft">
               {product.specs.map((s) => (
                 <div key={s.label} className="flex justify-between px-4 py-2 text-sm">
                   <dt className="text-muted-foreground">{s.label}</dt>
@@ -164,8 +213,8 @@ export default async function ProductPage({
       </div>
 
       {related.length > 0 ? (
-        <section className="mt-20">
-          <h2 className="mb-6 text-2xl font-semibold tracking-tight">Related products</h2>
+        <section className="mt-24">
+          <h2 className="mb-6 text-3xl tracking-tight">You may also like</h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((p) => (
               <ProductCard key={p.slug} product={p} />
@@ -174,5 +223,14 @@ export default async function ProductPage({
         </section>
       ) : null}
     </div>
+  );
+}
+
+function CheckMark() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="flex-none">
+      <circle cx="8" cy="8" r="8" fill="var(--color-brand-100)" />
+      <path d="M4.5 8.2l2.2 2.2 4.8-4.9" stroke="var(--color-brand-700)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }

@@ -41,7 +41,7 @@ export function CookieConsent() {
         <div className="mx-auto flex max-w-3xl flex-col gap-3 rounded-2xl border border-border bg-surface p-5 shadow-lg sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted-foreground">
             {t("common.cookie.text")}{" "}
-            <Link href="/legal/cookies" className="font-medium text-brand-600 hover:text-brand-700">
+            <Link href="/legal/cookies" className="font-medium text-brand-700 hover:text-brand-700">
               {t("common.cookie.settings")}
             </Link>
             .
@@ -55,7 +55,7 @@ export function CookieConsent() {
             </button>
             <button
               onClick={() => choose("accepted")}
-              className="h-9 rounded-full bg-brand-600 px-4 text-sm font-medium text-white hover:bg-brand-700"
+              className="h-9 rounded-full bg-brand-700 px-4 text-sm font-medium text-white hover:bg-brand-700"
             >
               {t("common.cookie.acceptAll")}
             </button>

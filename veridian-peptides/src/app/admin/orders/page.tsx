@@ -56,7 +56,7 @@ export default async function AdminOrdersPage() {
                           </option>
                         ))}
                       </select>
-                      <button className="h-9 rounded-lg bg-brand-600 px-3 text-xs font-medium text-white hover:bg-brand-700">
+                      <button className="h-9 rounded-lg bg-brand-700 px-3 text-xs font-medium text-white hover:bg-brand-700">
                         Save
                       </button>
                     </form>

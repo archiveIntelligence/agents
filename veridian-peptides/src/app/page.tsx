@@ -24,18 +24,20 @@ export default async function HomePage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-50 via-surface to-accent-50" />
-        <div className="container-px grid gap-10 py-20 lg:grid-cols-2 lg:items-center lg:py-28">
+        <div className="absolute inset-0 -z-10 bg-background" />
+        <div className="absolute -left-32 -top-32 -z-10 h-[28rem] w-[28rem] rounded-full bg-brand-100/60 blur-3xl" />
+        <div className="absolute -right-24 top-20 -z-10 h-[24rem] w-[24rem] rounded-full bg-accent-100/40 blur-3xl" />
+        <div className="container-px grid gap-12 py-24 lg:grid-cols-2 lg:items-center lg:py-32">
           <div>
             <Badge tone="accent">{t("home.hero.badge")}</Badge>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+            <h1 className="mt-5 text-balance text-5xl leading-[1.05] tracking-tight sm:text-6xl">
               {t("home.hero.titleA")}{" "}
-              <span className="text-brand-600">{t("home.hero.titleHighlight")}</span>.
+              <span className="italic text-brand-700">{t("home.hero.titleHighlight")}</span>.
             </h1>
-            <p className="mt-5 max-w-lg text-lg text-muted-foreground">
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">
               {t("home.hero.lead")}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-9 flex flex-wrap gap-3">
               <ButtonLink href="/products" size="lg">
                 {t("home.hero.shopAll")}
               </ButtonLink>
@@ -43,7 +45,7 @@ export default async function HomePage() {
                 {t("home.hero.browseCoa")}
               </ButtonLink>
             </div>
-            <p className="mt-6 text-xs text-muted-foreground">
+            <p className="mt-7 max-w-md text-xs leading-relaxed text-muted-foreground">
               {t("home.hero.disclaimer")}
             </p>
           </div>
@@ -96,9 +98,9 @@ export default async function HomePage() {
               </ButtonLink>
             </div>
           </div>
-          <div className="rounded-2xl border border-border bg-background p-6">
+          <div className="rounded-2xl border border-border bg-surface p-6 shadow-lift">
             <div className="flex items-center justify-between">
-              <span className="font-mono text-sm">VP24-GLP-7781</span>
+              <span className="font-mono text-sm tracking-tight">VP24-GLP-7781</span>
               <Badge tone="ok">Verified</Badge>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
@@ -119,10 +121,10 @@ export default async function HomePage() {
             <Link
               key={cat.slug}
               href={`/products?category=${cat.slug}`}
-              className="group rounded-2xl border border-border bg-surface p-6 transition-shadow hover:shadow-md"
+              className="group rounded-2xl border border-border bg-surface p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
             >
-              <h3 className="font-semibold group-hover:text-brand-600">{cat.name}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{cat.description}</p>
+              <h3 className="text-lg transition-colors group-hover:text-brand-700">{cat.name}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cat.description}</p>
             </Link>
           ))}
         </div>
@@ -136,10 +138,10 @@ export default async function HomePage() {
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="group flex flex-col rounded-2xl border border-border bg-surface p-6 transition-shadow hover:shadow-md"
+              className="group flex flex-col rounded-2xl border border-border bg-surface p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
             >
               <Badge tone="neutral">{post.category}</Badge>
-              <h3 className="mt-3 font-semibold group-hover:text-brand-600">{post.title}</h3>
+              <h3 className="mt-4 text-lg leading-snug transition-colors group-hover:text-brand-700">{post.title}</h3>
               <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{post.excerpt}</p>
               <span className="mt-4 text-xs text-muted-foreground">
                 {formatDate(post.publishedOn)} · {post.readingMinutes} min read
@@ -154,9 +156,9 @@ export default async function HomePage() {
 
 function StatCard({ value, label }: { value: string; label: string }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface/70 p-6 backdrop-blur">
-      <div className="text-3xl font-semibold text-brand-600">{value}</div>
-      <div className="mt-1 text-sm text-muted-foreground">{label}</div>
+    <div className="rounded-2xl border border-border bg-surface/80 p-6 shadow-soft backdrop-blur transition-transform duration-300 hover:-translate-y-1">
+      <div className="font-display text-4xl text-brand-700">{value}</div>
+      <div className="mt-2 text-sm text-muted-foreground">{label}</div>
     </div>
   );
 }
@@ -164,7 +166,7 @@ function StatCard({ value, label }: { value: string; label: string }) {
 function TrustItem({ title, desc }: { title: string; desc: string }) {
   return (
     <div className="flex items-start gap-3">
-      <span className="mt-1 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-brand-600 text-[10px] font-bold text-white">
+      <span className="mt-1 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-brand-700 text-[10px] font-bold text-white">
         ✓
       </span>
       <div>
@@ -187,8 +189,12 @@ function SectionHeading({
   return (
     <div className="mb-8 flex items-end justify-between">
       <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h2>
-      <Link href={href} className="text-sm font-medium text-brand-600 hover:text-brand-700">
-        {linkLabel} →
+      <Link
+        href={href}
+        className="group inline-flex items-center gap-1 text-sm font-medium text-brand-700 transition-colors hover:text-brand-800"
+      >
+        {linkLabel}
+        <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
       </Link>
     </div>
   );

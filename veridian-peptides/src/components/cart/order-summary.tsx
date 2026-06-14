@@ -21,9 +21,7 @@ export function OrderSummary({ breakdown }: { breakdown: PriceBreakdown }) {
 
   return (
     <div>
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-        Order summary
-      </h2>
+      <h2 className="eyebrow">Order summary</h2>
       <dl className="mt-4 space-y-2 text-sm">
         <Row label={`Subtotal (${itemCount} item${itemCount === 1 ? "" : "s"})`} value={formatPrice(subtotalCents)} />
         {bulkDiscountCents > 0 ? (
@@ -54,7 +52,7 @@ function Row({ label, value, accent }: { label: string; value: string; accent?: 
   return (
     <div className="flex justify-between">
       <dt className="text-muted-foreground">{label}</dt>
-      <dd className={accent ? "font-medium text-brand-600" : "font-medium"}>{value}</dd>
+      <dd className={accent ? "font-medium text-brand-700" : "font-medium"}>{value}</dd>
     </div>
   );
 }

@@ -19,7 +19,7 @@ export function SandboxPay({ providerRef }: { providerRef: string }) {
   if (status === "paid") {
     return (
       <div className="rounded-2xl border border-brand-200 bg-brand-50 p-8 text-center">
-        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand-600 text-xl font-bold text-white">
+        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand-700 text-xl font-bold text-white">
           ✓
         </span>
         <h1 className="mt-4 text-2xl font-semibold text-brand-900">Payment confirmed</h1>

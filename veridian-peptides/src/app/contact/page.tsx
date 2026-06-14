@@ -42,7 +42,7 @@ export default function ContactPage() {
           className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
           required
         />
-        <button className="h-11 rounded-full bg-brand-600 px-6 text-sm font-medium text-white hover:bg-brand-700">
+        <button className="h-11 rounded-full bg-brand-700 px-6 text-sm font-medium text-white hover:bg-brand-700">
           Send message
         </button>
       </form>

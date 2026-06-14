@@ -45,7 +45,7 @@ export default async function AdminProductsPage() {
                 </td>
                 <td className="px-4 py-3">{p.purity}%</td>
                 <td className="px-4 py-3 text-right">
-                  <Link href={`/admin/products/${p.slug}`} className="font-medium text-brand-600 hover:text-brand-700">
+                  <Link href={`/admin/products/${p.slug}`} className="font-medium text-brand-700 hover:text-brand-700">
                     Edit
                   </Link>
                 </td>

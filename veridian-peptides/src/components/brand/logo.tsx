@@ -37,8 +37,8 @@ export function Logo({ className }: { className?: string }) {
   return (
     <span className={`inline-flex items-center gap-2 ${className ?? ""}`}>
       <LogoGlyph className="h-8 w-8" />
-      <span className="text-lg font-semibold tracking-tight">
-        Veridian<span className="text-brand-600">Peptides</span>
+      <span className="font-display text-xl tracking-tight">
+        Veridian<span className="text-brand-700"> Peptides</span>
       </span>
     </span>
   );

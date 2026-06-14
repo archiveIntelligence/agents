@@ -44,7 +44,7 @@ export default async function StacksPage() {
               <ul className="mt-4 space-y-1 text-sm">
                 {items.map((p) => (
                   <li key={p.slug} className="flex justify-between">
-                    <Link href={`/products/${p.slug}`} className="hover:text-brand-600">
+                    <Link href={`/products/${p.slug}`} className="hover:text-brand-700">
                       {p.name}
                     </Link>
                     <Price cents={p.priceCents} className="text-muted-foreground" />

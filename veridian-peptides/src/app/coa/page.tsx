@@ -22,8 +22,8 @@ export default async function CoaVaultPage({
     <div className="container-px py-12">
       <header className="mb-8 max-w-2xl">
         <Badge tone="brand">Quality &amp; Testing</Badge>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight">COA Vault</h1>
-        <p className="mt-2 text-muted-foreground">
+        <h1 className="mt-4 text-4xl tracking-tight">COA Vault</h1>
+        <p className="mt-3 text-lg leading-relaxed text-muted-foreground">
           Every batch we sell is tested by an independent laboratory. Search by
           batch number or product name, then verify the report independently.
         </p>
@@ -41,14 +41,14 @@ export default async function CoaVaultPage({
           name="q"
           defaultValue={q ?? ""}
           placeholder="Search batch or product…"
-          className="h-11 flex-1 rounded-full border border-border bg-surface px-4 text-sm focus-visible:outline-2 focus-visible:outline-ring"
+          className="h-11 flex-1 rounded-full border border-border bg-surface px-4 text-sm shadow-soft focus-visible:border-brand-400 focus-visible:outline-2 focus-visible:outline-ring"
         />
-        <button className="h-11 rounded-full bg-brand-600 px-5 text-sm font-medium text-white hover:bg-brand-700">
+        <button className="h-11 rounded-full bg-brand-700 px-5 text-sm font-medium text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-brand-800 hover:shadow-lift">
           Search
         </button>
       </form>
 
-      <div className="overflow-hidden rounded-2xl border border-border bg-surface">
+      <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-soft">
         <table className="w-full text-left text-sm">
           <thead className="bg-surface-muted text-xs uppercase tracking-wide text-muted-foreground">
             <tr>
@@ -71,7 +71,7 @@ export default async function CoaVaultPage({
                 <tr key={c.batch} className="hover:bg-surface-muted/50">
                   <td className="px-4 py-3 font-mono">{c.batch}</td>
                   <td className="px-4 py-3">
-                    <Link href={`/products/${c.productSlug}`} className="hover:text-brand-600">
+                    <Link href={`/products/${c.productSlug}`} className="hover:text-brand-700">
                       {c.productName}
                     </Link>
                   </td>
@@ -84,7 +84,7 @@ export default async function CoaVaultPage({
                       href={c.verifyUrl}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="font-medium text-brand-600 hover:text-brand-700"
+                      className="font-medium text-brand-700 hover:text-brand-800"
                     >
                       Verify ↗
                     </a>

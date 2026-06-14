@@ -16,8 +16,8 @@ export default async function BlogIndexPage() {
     <div className="container-px py-14">
       <header className="mb-10 max-w-2xl">
         <Badge tone="brand">Research Blog</Badge>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight">Research blog</h1>
-        <p className="mt-3 text-lg text-muted-foreground">
+        <h1 className="mt-4 text-4xl tracking-tight sm:text-5xl">Research blog</h1>
+        <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
           Practical, lab-focused guides — written for researchers.
         </p>
       </header>
@@ -27,11 +27,11 @@ export default async function BlogIndexPage() {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="group flex flex-col rounded-2xl border border-border bg-surface p-6 transition-shadow hover:shadow-md"
+            className="group flex flex-col rounded-2xl border border-border bg-surface p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
           >
             <Badge tone="neutral">{post.category}</Badge>
-            <h2 className="mt-3 font-semibold group-hover:text-brand-600">{post.title}</h2>
-            <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{post.excerpt}</p>
+            <h2 className="mt-4 text-lg leading-snug transition-colors group-hover:text-brand-700">{post.title}</h2>
+            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">{post.excerpt}</p>
             <span className="mt-4 text-xs text-muted-foreground">
               {formatDate(post.publishedOn)} · {post.readingMinutes} min read
             </span>

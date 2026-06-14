@@ -87,7 +87,7 @@ export default async function EditProductPage({
           Featured on homepage
         </label>
 
-        <button className="h-11 rounded-full bg-brand-600 px-6 text-sm font-medium text-white hover:bg-brand-700">
+        <button className="h-11 rounded-full bg-brand-700 px-6 text-sm font-medium text-white hover:bg-brand-700">
           Save changes
         </button>
       </form>

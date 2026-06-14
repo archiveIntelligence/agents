@@ -42,7 +42,7 @@ export default async function AdminCoaPage() {
           <input name="verifyUrl" type="url" className={inputCls} placeholder="https://…" />
         </Field>
         <div className="sm:col-span-2">
-          <button className="h-11 rounded-full bg-brand-600 px-6 text-sm font-medium text-white hover:bg-brand-700">
+          <button className="h-11 rounded-full bg-brand-700 px-6 text-sm font-medium text-white hover:bg-brand-700">
             Add certificate
           </button>
         </div>

@@ -11,18 +11,23 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group flex flex-col overflow-hidden rounded-[var(--radius,0.875rem)] rounded-2xl border border-border bg-surface transition-shadow hover:shadow-lg"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
     >
       {/* Placeholder product visual — SVG vial, no third-party imagery */}
-      <div className="relative flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-brand-50 to-accent-50">
-        <VialGlyph />
+      <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-gradient-to-br from-brand-50 via-surface to-ink-100">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(13,111,80,0.10),transparent_60%)]" />
+        <div className="transition-transform duration-500 group-hover:scale-110">
+          <VialGlyph />
+        </div>
         <span className="absolute left-3 top-3">
           <Badge tone="brand">{product.purity}% purity</Badge>
         </span>
       </div>
-      <div className="flex flex-1 flex-col gap-2 p-4">
+      <div className="flex flex-1 flex-col gap-2 p-5">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="font-semibold tracking-tight">{product.name}</h3>
+          <h3 className="font-display text-lg tracking-tight transition-colors group-hover:text-brand-700">
+            {product.name}
+          </h3>
           <Badge tone={toneMap[stock.tone]}>{stock.text}</Badge>
         </div>
         <p className="line-clamp-2 text-sm text-muted-foreground">{product.tagline}</p>

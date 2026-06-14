@@ -18,6 +18,15 @@ export async function Header() {
   const [user, t] = await Promise.all([getCurrentUser(), getServerT()]);
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/80 backdrop-blur">
+      {/* Announcement strip — honest, recurring value props */}
+      <div className="bg-brand-900 text-brand-50">
+        <div className="container-px flex h-9 items-center justify-center gap-3 text-center text-xs font-medium tracking-wide">
+          <span>{t("announce.shipping")}</span>
+          <span className="hidden text-brand-300 sm:inline">·</span>
+          <span className="hidden sm:inline">{t("announce.coa")}</span>
+        </div>
+      </div>
+
       <div className="container-px flex h-16 items-center justify-between gap-6">
         <Link href="/" aria-label="Veridian Peptides home">
           <Logo />

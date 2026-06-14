@@ -27,6 +27,8 @@ const en: Messages = {
   "nav.blog": "Research Blog",
   "header.signIn": "Sign in",
   "header.cart": "Cart",
+  "announce.shipping": "Free tracked EU shipping over €200",
+  "announce.coa": "Independent COA for every batch",
   "footer.tagline":
     "Independently tested research peptides. Supplied strictly for laboratory research. Not for human consumption.",
   "footer.products": "Products",
@@ -64,6 +66,8 @@ const de: Messages = {
   "nav.blog": "Research-Blog",
   "header.signIn": "Anmelden",
   "header.cart": "Warenkorb",
+  "announce.shipping": "Kostenloser EU-Versand mit Tracking ab €200",
+  "announce.coa": "Unabhängiges COA für jede Charge",
   "footer.tagline":
     "Unabhängig getestete Research-Peptide. Ausschließlich für Laborforschung. Nicht zum menschlichen Verzehr.",
   "footer.products": "Produkte",

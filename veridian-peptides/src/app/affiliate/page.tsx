@@ -28,7 +28,7 @@ export default function AffiliatePage() {
       >
         <input name="email" type="email" placeholder="Email" className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm" required />
         <input name="platform" placeholder="Website / channel" className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm" />
-        <button className="h-11 rounded-full bg-brand-600 px-6 text-sm font-medium text-white hover:bg-brand-700">
+        <button className="h-11 rounded-full bg-brand-700 px-6 text-sm font-medium text-white hover:bg-brand-700">
           Apply to join
         </button>
       </form>

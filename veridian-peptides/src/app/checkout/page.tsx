@@ -7,6 +7,7 @@ import { useCart } from "@/lib/cart/cart-context";
 import { useCurrency } from "@/components/i18n/currency-provider";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { OrderSummary } from "@/components/cart/order-summary";
+import { IncentiveMeter } from "@/components/cart/incentive-meter";
 import { placeOrder, type PaymentMethod } from "@/lib/cart/actions";
 import type { PaymentInitiation } from "@/lib/payments/types";
 
@@ -37,7 +38,7 @@ export default function CheckoutPage() {
   if (ready && lines.length === 0 && step !== "done") {
     return (
       <div className="container-px py-20 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">Nothing to check out</h1>
+        <h1 className="text-3xl tracking-tight">Nothing to check out</h1>
         <p className="mt-2 text-muted-foreground">Your cart is empty.</p>
         <div className="mt-6">
           <ButtonLink href="/products">Shop all peptides</ButtonLink>
@@ -91,11 +92,11 @@ export default function CheckoutPage() {
   if (step === "done" && orderId) {
     return (
       <div className="container-px py-20">
-        <div className="mx-auto max-w-lg rounded-2xl border border-brand-200 bg-brand-50 p-8 text-center">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand-600 text-xl font-bold text-white">
+        <div className="mx-auto max-w-lg rounded-2xl border border-brand-200 bg-brand-50 p-8 text-center shadow-soft">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand-700 text-xl font-bold text-white">
             ✓
           </span>
-          <h1 className="mt-4 text-2xl font-semibold tracking-tight text-brand-900">
+          <h1 className="mt-4 text-3xl tracking-tight text-brand-900">
             Order placed
           </h1>
           <p className="mt-2 text-brand-800">
@@ -130,7 +131,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="container-px py-12">
-      <h1 className="mb-2 text-3xl font-semibold tracking-tight">Checkout</h1>
+      <h1 className="mb-4 text-4xl tracking-tight">Checkout</h1>
       <Steps current={step} />
 
       <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_22rem]">
@@ -151,11 +152,11 @@ export default function CheckoutPage() {
                   <Field label="Postal code" value={address.postalCode} onChange={(v) => setAddress({ ...address, postalCode: v })} />
                 </div>
                 <label className="block">
-                  <span className="mb-1 block text-sm text-muted-foreground">Country</span>
+                  <span className="mb-1.5 block text-sm font-medium text-foreground">Country</span>
                   <select
                     value={address.country}
                     onChange={(e) => setAddress({ ...address, country: e.target.value })}
-                    className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm"
+                    className="h-12 w-full rounded-xl border border-border bg-surface px-3.5 text-sm shadow-soft"
                   >
                     {EU_COUNTRIES.map((c) => (
                       <option key={c}>{c}</option>
@@ -236,11 +237,23 @@ export default function CheckoutPage() {
           )}
         </div>
 
-        <aside className="h-fit rounded-2xl border border-border bg-surface p-6">
+        <aside className="h-fit space-y-5 rounded-2xl border border-border bg-surface p-6 shadow-soft lg:sticky lg:top-24">
+          <IncentiveMeter breakdown={breakdown} />
           <OrderSummary breakdown={breakdown} />
-          <Link href="/cart" className="mt-4 block text-center text-sm text-muted-foreground hover:text-foreground">
+          <Link href="/cart" className="block text-center text-sm text-muted-foreground hover:text-foreground">
             Edit cart
           </Link>
+          <ul className="space-y-2 border-t border-border pt-4 text-sm text-muted-foreground">
+            {[
+              "Independent HPLC certificate for every batch",
+              "Encrypted, secure checkout",
+              "Tracked, discreet EU dispatch",
+            ].map((item) => (
+              <li key={item} className="flex items-center gap-2">
+                <TrustTick /> {item}
+              </li>
+            ))}
+          </ul>
         </aside>
       </div>
     </div>
@@ -256,8 +269,8 @@ function Steps({ current }: { current: Step }) {
       {order.map((s, i) => (
         <li key={s} className="flex items-center gap-2">
           <span
-            className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ${
-              i <= idx ? "bg-brand-600 text-white" : "bg-surface-muted text-muted-foreground"
+            className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold transition-colors ${
+              i <= idx ? "bg-brand-700 text-white" : "bg-surface-muted text-muted-foreground"
             }`}
           >
             {i + 1}
@@ -273,7 +286,7 @@ function Steps({ current }: { current: Step }) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="space-y-4">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{title}</h2>
+      <h2 className="eyebrow">{title}</h2>
       {children}
     </div>
   );
@@ -292,12 +305,12 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm text-muted-foreground">{label}</span>
+      <span className="mb-1.5 block text-sm font-medium text-foreground">{label}</span>
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm focus-visible:outline-2 focus-visible:outline-ring"
+        className="h-12 w-full rounded-xl border border-border bg-surface px-3.5 text-sm shadow-soft transition-colors focus-visible:border-brand-400 focus-visible:outline-2 focus-visible:outline-ring"
       />
     </label>
   );
@@ -318,22 +331,31 @@ function PaymentOption({
     <button
       type="button"
       onClick={onSelect}
-      className={`flex w-full items-start gap-3 rounded-xl border p-4 text-left transition-colors ${
-        selected ? "border-brand-600 bg-brand-50" : "border-border hover:bg-surface-muted"
+      className={`flex w-full items-start gap-3 rounded-xl border p-4 text-left transition-all duration-200 ${
+        selected ? "border-brand-700 bg-brand-50 shadow-soft" : "border-border hover:border-brand-300 hover:bg-surface-muted"
       }`}
     >
       <span
         className={`mt-0.5 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full border-2 ${
-          selected ? "border-brand-600" : "border-ink-300"
+          selected ? "border-brand-700" : "border-ink-300"
         }`}
       >
-        {selected ? <span className="h-2.5 w-2.5 rounded-full bg-brand-600" /> : null}
+        {selected ? <span className="h-2.5 w-2.5 rounded-full bg-brand-700" /> : null}
       </span>
       <span>
         <span className="block font-medium">{title}</span>
         <span className="block text-sm text-muted-foreground">{desc}</span>
       </span>
     </button>
+  );
+}
+
+function TrustTick() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="flex-none">
+      <circle cx="8" cy="8" r="8" fill="var(--color-brand-100)" />
+      <path d="M4.5 8.2l2.2 2.2 4.8-4.9" stroke="var(--color-brand-700)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 

@@ -5,6 +5,8 @@ import { useCart } from "@/lib/cart/cart-context";
 import { useCurrency } from "@/components/i18n/currency-provider";
 import { ButtonLink } from "@/components/ui/button";
 import { OrderSummary } from "@/components/cart/order-summary";
+import { IncentiveMeter } from "@/components/cart/incentive-meter";
+import { discountPercent } from "@/lib/format";
 
 export default function CartPage() {
   const { lines, breakdown, setQuantity, remove, ready } = useCart();
@@ -26,16 +28,16 @@ export default function CartPage() {
 
   return (
     <div className="container-px py-12">
-      <h1 className="mb-8 text-3xl font-semibold tracking-tight">Your cart</h1>
+      <h1 className="mb-8 text-4xl tracking-tight">Your cart</h1>
 
       <div className="grid gap-10 lg:grid-cols-[1fr_22rem]">
         <ul className="divide-y divide-border rounded-2xl border border-border bg-surface">
           {lines.map((line) => (
             <li key={line.slug} className="flex gap-4 p-4">
-              <div className="flex h-20 w-20 flex-none items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-accent-50">
+              <div className="flex h-20 w-20 flex-none items-center justify-center rounded-xl border border-border bg-gradient-to-br from-brand-50 via-surface to-ink-100">
                 <svg width="36" height="36" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-                  <rect x="24" y="6" width="16" height="6" rx="2" fill="var(--color-brand-600)" />
-                  <path d="M26 12h12v36a6 6 0 0 1-12 0V12Z" fill="white" stroke="var(--color-brand-600)" strokeWidth="2" />
+                  <rect x="24" y="6" width="16" height="6" rx="2" fill="var(--color-brand-700)" />
+                  <path d="M26 12h12v36a6 6 0 0 1-12 0V12Z" fill="white" stroke="var(--color-brand-700)" strokeWidth="2" />
                   <path d="M26 34h12v14a6 6 0 0 1-12 0V34Z" fill="var(--color-brand-300)" />
                 </svg>
               </div>
@@ -43,7 +45,7 @@ export default function CartPage() {
               <div className="flex flex-1 flex-col">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <Link href={`/products/${line.slug}`} className="font-semibold hover:text-brand-600">
+                    <Link href={`/products/${line.slug}`} className="font-display text-lg hover:text-brand-700">
                       {line.product.name}
                     </Link>
                     <p className="text-sm text-muted-foreground">{line.product.size}</p>
@@ -52,9 +54,20 @@ export default function CartPage() {
                     <div className="font-semibold">
                       {formatPrice(line.product.priceCents * line.quantity)}
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      {formatPrice(line.product.priceCents)} each
-                    </div>
+                    {line.product.compareAtCents ? (
+                      <div className="text-xs">
+                        <span className="text-muted-foreground line-through">
+                          {formatPrice(line.product.compareAtCents * line.quantity)}
+                        </span>{" "}
+                        <span className="font-medium text-brand-700">
+                          save {discountPercent(line.product.priceCents, line.product.compareAtCents)}%
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="text-xs text-muted-foreground">
+                        {formatPrice(line.product.priceCents)} each
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -88,16 +101,31 @@ export default function CartPage() {
           ))}
         </ul>
 
-        <aside className="h-fit rounded-2xl border border-border bg-surface p-6">
+        <aside className="h-fit space-y-5 rounded-2xl border border-border bg-surface p-6 shadow-soft lg:sticky lg:top-24">
+          <IncentiveMeter breakdown={breakdown} />
           <OrderSummary breakdown={breakdown} />
-          <ButtonLink href="/checkout" className="mt-6 w-full">
+          <ButtonLink href="/checkout" size="lg" className="w-full">
             Proceed to checkout
           </ButtonLink>
-          <p className="mt-3 text-center text-xs text-muted-foreground">
+          <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1"><Lock /> Secure checkout</span>
+            <span>·</span>
+            <span>Tracked EU shipping</span>
+          </div>
+          <p className="text-center text-xs text-muted-foreground">
             For research use only. Not for human consumption.
           </p>
         </aside>
       </div>
     </div>
+  );
+}
+
+function Lock() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="3" y="7" width="10" height="7" rx="1.5" fill="var(--color-brand-700)" />
+      <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="var(--color-brand-700)" strokeWidth="1.5" fill="none" />
+    </svg>
   );
 }

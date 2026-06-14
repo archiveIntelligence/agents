@@ -28,7 +28,7 @@ export default function WholesalePage() {
         <input name="organisation" placeholder="Organisation" className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm" required />
         <input name="email" type="email" placeholder="Work email" className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm" required />
         <textarea name="requirements" placeholder="Products and estimated monthly volume" rows={4} className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm" required />
-        <button className="h-11 rounded-full bg-brand-600 px-6 text-sm font-medium text-white hover:bg-brand-700">
+        <button className="h-11 rounded-full bg-brand-700 px-6 text-sm font-medium text-white hover:bg-brand-700">
           Request quote
         </button>
       </form>

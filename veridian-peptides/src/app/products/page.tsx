@@ -43,9 +43,9 @@ export default async function ProductsPage({
 
   return (
     <div className="container-px py-12">
-      <header className="mb-8">
-        <h1 className="text-3xl font-semibold tracking-tight">All research peptides</h1>
-        <p className="mt-2 text-muted-foreground">
+      <header className="mb-10">
+        <h1 className="text-4xl tracking-tight">All research peptides</h1>
+        <p className="mt-3 text-muted-foreground">
           {results.length} product{results.length === 1 ? "" : "s"} · for research use only
         </p>
       </header>
@@ -54,14 +54,12 @@ export default async function ProductsPage({
         {/* Filters */}
         <aside className="space-y-8">
           <div>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Category
-            </h2>
+            <h2 className="eyebrow mb-3">Category</h2>
             <ul className="space-y-1 text-sm">
               <li>
                 <Link
                   href={buildHref({ category: undefined })}
-                  className={!sp.category ? "font-medium text-brand-600" : "text-muted-foreground hover:text-foreground"}
+                  className={!sp.category ? "font-medium text-brand-700" : "text-muted-foreground hover:text-foreground"}
                 >
                   All categories
                 </Link>
@@ -70,7 +68,7 @@ export default async function ProductsPage({
                 <li key={c.slug}>
                   <Link
                     href={buildHref({ category: c.slug })}
-                    className={sp.category === c.slug ? "font-medium text-brand-600" : "text-muted-foreground hover:text-foreground"}
+                    className={sp.category === c.slug ? "font-medium text-brand-700" : "text-muted-foreground hover:text-foreground"}
                   >
                     {c.name}
                   </Link>
@@ -80,12 +78,10 @@ export default async function ProductsPage({
           </div>
 
           <div>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Availability
-            </h2>
+            <h2 className="eyebrow mb-3">Availability</h2>
             <Link
               href={buildHref({ stock: sp.stock === "1" ? undefined : "1" })}
-              className={`text-sm ${sp.stock === "1" ? "font-medium text-brand-600" : "text-muted-foreground hover:text-foreground"}`}
+              className={`text-sm ${sp.stock === "1" ? "font-medium text-brand-700" : "text-muted-foreground hover:text-foreground"}`}
             >
               {sp.stock === "1" ? "☑" : "☐"} In stock only
             </Link>
@@ -101,7 +97,7 @@ export default async function ProductsPage({
                 href={buildHref({ sort: o.value })}
                 className={`rounded-full border px-3 py-1 text-sm ${
                   sort === o.value
-                    ? "border-brand-600 bg-brand-50 text-brand-700"
+                    ? "border-brand-300 bg-brand-50 text-brand-700"
                     : "border-border text-muted-foreground hover:text-foreground"
                 }`}
               >

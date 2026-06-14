@@ -48,18 +48,18 @@ const columns = [
 export async function Footer() {
   const t = await getServerT();
   return (
-    <footer className="mt-24 border-t border-border bg-surface">
-      <div className="container-px grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-5">
+    <footer className="mt-28 border-t border-border bg-surface">
+      <div className="container-px grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-1">
           <Logo />
-          <p className="mt-4 max-w-xs text-sm text-muted-foreground">
+          <p className="mt-5 max-w-xs text-sm leading-relaxed text-muted-foreground">
             {t("footer.tagline")}
           </p>
         </div>
         {columns.map((col) => (
           <div key={col.title}>
-            <h4 className="text-sm font-semibold">{t(col.titleKey)}</h4>
-            <ul className="mt-4 space-y-2">
+            <h4 className="eyebrow">{t(col.titleKey)}</h4>
+            <ul className="mt-4 space-y-2.5">
               {col.links.map((link) => (
                 <li key={link.href}>
                   <Link

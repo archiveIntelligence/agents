@@ -33,7 +33,7 @@ export default async function AdminBlogPage() {
             <input name="readingMinutes" type="number" min="1" defaultValue={5} className={inputCls} />
           </Field>
         </div>
-        <button className="h-11 rounded-full bg-brand-600 px-6 text-sm font-medium text-white hover:bg-brand-700">
+        <button className="h-11 rounded-full bg-brand-700 px-6 text-sm font-medium text-white hover:bg-brand-700">
           Publish post
         </button>
       </form>
