@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ButtonLink } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProductCard } from "@/components/product/product-card";
+import { HeroShader } from "@/components/hero/hero-shader";
 import {
   getAveragePurity,
   getBlogPosts,
@@ -24,9 +25,18 @@ export default async function HomePage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border">
-        <div className="absolute inset-0 -z-10 bg-background" />
-        <div className="absolute -left-32 -top-32 -z-10 h-[28rem] w-[28rem] rounded-full bg-brand-100/60 blur-3xl" />
-        <div className="absolute -right-24 top-20 -z-10 h-[24rem] w-[24rem] rounded-full bg-accent-100/40 blur-3xl" />
+        {/* Interactive shader background (ported from the Veridian Hero design) */}
+        <div className="absolute inset-0 -z-20 bg-background">
+          <HeroShader variant="marble" className="h-full w-full" />
+        </div>
+        {/* Readability scrim: lifts the headline column off the shader */}
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            background:
+              "linear-gradient(100deg, rgba(250,249,245,0.82) 0%, rgba(250,249,245,0.38) 34%, rgba(250,249,245,0) 60%)",
+          }}
+        />
         <div className="container-px grid gap-12 py-24 lg:grid-cols-2 lg:items-center lg:py-32">
           <div>
             <Badge tone="accent">{t("home.hero.badge")}</Badge>
@@ -100,13 +110,13 @@ export default async function HomePage() {
           </div>
           <div className="rounded-2xl border border-border bg-surface p-6 shadow-lift">
             <div className="flex items-center justify-between">
-              <span className="font-mono text-sm tracking-tight">VP24-GLP-7781</span>
+              <span className="font-mono text-sm tracking-tight">VP-TIRZ-2601</span>
               <Badge tone="ok">Verified</Badge>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-              <Field label="Product" value="VP-GLP-001" />
-              <Field label="Purity (HPLC)" value="99.4%" />
-              <Field label="Tested" value="12 Apr 2026" />
+              <Field label="Product" value="Tirzepatide" />
+              <Field label="Purity (HPLC)" value="99.2%" />
+              <Field label="Tested" value="18 May 2026" />
               <Field label="Lab" value="Independent HPLC" />
             </div>
           </div>
