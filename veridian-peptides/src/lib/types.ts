@@ -79,6 +79,20 @@ export interface Coa {
   verifyUrl: string;
 }
 
+export interface Review {
+  /** Product group name this review is about (shared across size variants). */
+  productName: string;
+  author: string;
+  /** 1–5 stars. */
+  rating: number;
+  title: string;
+  body: string;
+  /** True when tied to a confirmed order. */
+  verified: boolean;
+  /** ISO date string. */
+  date: string;
+}
+
 export interface BlogPost {
   slug: string;
   title: string;

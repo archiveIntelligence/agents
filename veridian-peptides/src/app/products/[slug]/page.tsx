@@ -9,11 +9,15 @@ import { ProductCard } from "@/components/product/product-card";
 import { ProductHighlights } from "@/components/product/product-highlights";
 import { ProductMonograph } from "@/components/product/product-monograph";
 import { VialImage } from "@/components/product/vial-image";
+import { ProductReviews } from "@/components/product/product-reviews";
+import { CompleteThePack, type PackItem } from "@/components/product/complete-the-pack";
+import { StarRating } from "@/components/product/star-rating";
 import {
   getCategory,
   getCoas,
   getProduct,
   getProducts,
+  getProductReviews,
   getRelatedProducts,
 } from "@/lib/repository";
 import { products } from "@/lib/data";
@@ -76,6 +80,24 @@ export default async function ProductPage({
   const perMgCents = pricePerMgCents(product.priceCents, product.size);
   const bulkUnitPriceCents = Math.round(product.priceCents * (1 - BULK_DISCOUNT_RATE));
 
+  const reviewSummary = getProductReviews(product.name);
+
+  // Complete-the-pack: this item + a complementary research compound +
+  // reconstitution water (genuinely complementary, not co-purchase stats).
+  const bacWater =
+    product.name === "Bacteriostatic Water"
+      ? undefined
+      : allProducts.find((p) => p.name === "Bacteriostatic Water");
+  const packItems: PackItem[] = [
+    { slug: product.slug, name: product.name, size: product.size, priceCents: product.priceCents },
+    ...(related[0]
+      ? [{ slug: related[0].slug, name: related[0].name, size: related[0].size, priceCents: related[0].priceCents }]
+      : []),
+    ...(bacWater
+      ? [{ slug: bacWater.slug, name: bacWater.name, size: bacWater.size, priceCents: bacWater.priceCents }]
+      : []),
+  ];
+
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -92,6 +114,15 @@ export default async function ProductPage({
           ? "https://schema.org/OutOfStock"
           : "https://schema.org/InStock",
     },
+    ...(reviewSummary.count > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: reviewSummary.average,
+            reviewCount: reviewSummary.count,
+          },
+        }
+      : {}),
   };
 
   return (
@@ -131,6 +162,17 @@ export default async function ProductPage({
             <Badge tone={toneMap[stock.tone]}>{stock.text}</Badge>
           </div>
           <h1 className="mt-4 text-4xl tracking-tight">{product.name}</h1>
+
+          {reviewSummary.count > 0 ? (
+            <a href="#reviews" className="mt-2 inline-flex items-center gap-2 text-sm">
+              <StarRating value={reviewSummary.average} size={15} />
+              <span className="font-medium text-foreground">{reviewSummary.average.toFixed(1)}</span>
+              <span className="text-muted-foreground hover:text-foreground">
+                ({reviewSummary.count} review{reviewSummary.count === 1 ? "" : "s"})
+              </span>
+            </a>
+          ) : null}
+
           <p className="mt-3 text-lg leading-relaxed text-muted-foreground">{product.tagline}</p>
 
           {/* Lead with skimmable buzzword highlights — minimal text, icons. */}
@@ -266,6 +308,14 @@ export default async function ProductPage({
           ) : null}
         </div>
       </div>
+
+      <CompleteThePack items={packItems} />
+
+      <ProductReviews
+        average={reviewSummary.average}
+        count={reviewSummary.count}
+        reviews={reviewSummary.reviews}
+      />
 
       {related.length > 0 ? (
         <section className="mt-24">

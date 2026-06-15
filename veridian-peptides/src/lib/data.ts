@@ -1,4 +1,5 @@
 import type {
+  Review,
   Bundle,
   BlogPost,
   Category,
@@ -1415,6 +1416,40 @@ These compounds are supplied for laboratory and research use only. Nothing here 
 3. [Enebo LB, et al. Safety, tolerability, pharmacokinetics, and pharmacodynamics of concomitant administration of multiple doses of cagrilintide with semaglutide 2.4 mg for weight management: a randomised, controlled, phase 1b trial. Lancet. 2021;397(10286):1736–1748.](https://doi.org/10.1016/S0140-6736(21)00845-X)
 4. [CagriSema REDEFINE phase 3 programme. ClinicalTrials.gov NCT05567796.](https://clinicaltrials.gov/study/NCT05567796)`,
   },
+];
+
+// ---------------------------------------------------------------------------
+// PLACEHOLDER sample reviews. These are seed/demo content so the reviews UI is
+// populated in development. They are first-party sample data — NOT real
+// customer testimonials. Replace with genuine, order-verified reviews before
+// going live; publishing fabricated reviews is unlawful in the EU (UCPD/DSA)
+// and under the FTC. Reviews are deliberately scoped to research-relevant
+// aspects (purity vs. COA, reconstitution, packaging, shipping) and make no
+// human-use claims.
+// ---------------------------------------------------------------------------
+export const reviews: Review[] = [
+  { productName: "Tirzepatide", author: "M. Hoffmann", rating: 5, verified: true, date: "2026-05-28", title: "Matched the COA", body: "Re-ran HPLC in-house and measured 99.0% — consistent with the published batch report. Lyophilised cake intact, vial well sealed." },
+  { productName: "Tirzepatide", author: "Lab procurement", rating: 5, verified: true, date: "2026-05-12", title: "Clean reconstitution", body: "Dissolved clear in bacteriostatic water, no cloudiness or residue. Cold-packed and the batch number matched the COA vault." },
+  { productName: "Tirzepatide", author: "R. Novak", rating: 4, verified: true, date: "2026-04-30", title: "Solid, fast shipping", body: "Tracked EU delivery in three days, discreet packaging. Mass-spec identity confirmed in our lab." },
+  { productName: "Retatrutide", author: "Dr. A. Berger", rating: 5, verified: true, date: "2026-06-02", title: "Excellent purity", body: "Independent HPLC came back 99.2%. Documentation and batch traceability were exactly what we need for reproducible work." },
+  { productName: "Retatrutide", author: "K. Fischer", rating: 5, verified: true, date: "2026-05-18", title: "Well handled", body: "Arrived cold, lyophilised powder intact. COA was already public before I ordered — appreciated the transparency." },
+  { productName: "Retatrutide", author: "S. Marsh", rating: 4, verified: false, date: "2026-05-05", title: "Good experience", body: "Reconstituted cleanly. Slightly slow to restock the 30mg but quality is consistent." },
+  { productName: "BPC-157", author: "T. Lang", rating: 5, verified: true, date: "2026-05-22", title: "Consistent batches", body: "Third order, purity matched the COA each time (99.4–99.6%). Stable in solution as expected." },
+  { productName: "BPC-157", author: "Uni lab, Vienna", rating: 5, verified: true, date: "2026-04-19", title: "Reliable supplier", body: "Batch number tied straight back to the COA. Sealed vials, good cold-chain packaging." },
+  { productName: "BPC-157", author: "J. Weber", rating: 4, verified: true, date: "2026-04-02", title: "As described", body: "Dissolved fully, no particulates. Shipping was quick within the EU." },
+  { productName: "TB-500", author: "P. Andersson", rating: 5, verified: true, date: "2026-05-09", title: "Identity confirmed", body: "Mass-spec matched the target mass within tolerance. Clean lyophilised cake." },
+  { productName: "TB-500", author: "R. Costa", rating: 4, verified: false, date: "2026-03-28", title: "Good purity", body: "HPLC trace was a single sharp peak. Packaging could use more padding but product was fine." },
+  { productName: "GHK-Cu (Copper Peptide)", author: "Dr. L. Moreau", rating: 5, verified: true, date: "2026-05-30", title: "True blue complex", body: "Distinct blue powder, dissolved cleanly. Purity matched the published COA — using it as a matrix-research reference." },
+  { productName: "GHK-Cu (Copper Peptide)", author: "C. Bauer", rating: 5, verified: true, date: "2026-04-25", title: "Great handling", body: "Protected from light in the packaging, copper complex stable. Batch traceability was clear." },
+  { productName: "Semaglutide", author: "N. Ito", rating: 5, verified: true, date: "2026-05-15", title: "Good comparator stock", body: "Use it as a GLP-1 reference; purity consistent with the COA at 99.3%. Fast dispatch." },
+  { productName: "Semaglutide", author: "H. Dubois", rating: 4, verified: true, date: "2026-04-11", title: "Reliable", body: "Reconstituted clear, no issues. COA available before purchase." },
+  { productName: "MOTS-c", author: "G. Romano", rating: 5, verified: true, date: "2026-05-03", title: "Clean material", body: "Single dominant HPLC peak, dissolved without residue. Good for mitochondrial-pathway work." },
+  { productName: "CJC-1295 + Ipamorelin", author: "D. Klein", rating: 5, verified: true, date: "2026-05-20", title: "Consistent blend", body: "Blend ratio as stated, purity matched the COA. Cold-packed and quick." },
+  { productName: "CJC-1295 + Ipamorelin", author: "F. Santos", rating: 4, verified: false, date: "2026-04-08", title: "Solid", body: "Reconstituted cleanly. Would like a larger size option." },
+  { productName: "Cagrilintide", author: "Dr. E. Wagner", rating: 5, verified: true, date: "2026-05-26", title: "High purity amylin", body: "98.9% on our HPLC, matched the batch COA. Good for combination metabolic research." },
+  { productName: "Selank", author: "V. Petrov", rating: 5, verified: true, date: "2026-05-07", title: "Clean nootropic peptide", body: "Identity confirmed, dissolved fully. Fast, discreet EU shipping." },
+  { productName: "Semax", author: "A. Lindgren", rating: 4, verified: true, date: "2026-04-21", title: "Good quality", body: "Single sharp HPLC peak, matched COA. Packaging well sealed." },
+  { productName: "GLOW Blend (BPC-157 / TB-500 / GHK-Cu)", author: "Recovery research lab", rating: 5, verified: true, date: "2026-05-24", title: "Convenient combination", body: "Three-component blend saved us prep time. Components dissolved cleanly; COA covered the blend." },
 ];
 
 export const AVERAGE_PURITY =

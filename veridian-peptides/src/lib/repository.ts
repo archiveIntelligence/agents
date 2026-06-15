@@ -5,8 +5,9 @@ import {
   categories,
   coas,
   products,
+  reviews,
 } from "./data";
-import type { Bundle, BlogPost, Category, Coa, Product } from "./types";
+import type { Bundle, BlogPost, Category, Coa, Product, Review } from "./types";
 
 // Data-access layer with two interchangeable backends:
 //   - PostgreSQL via Prisma when DATABASE_URL is configured
@@ -119,4 +120,26 @@ export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
 
 export function getAveragePurity(): number {
   return AVERAGE_PURITY;
+}
+
+export interface ReviewSummary {
+  count: number;
+  average: number; // 0 when no reviews
+  reviews: Review[];
+}
+
+/**
+ * Reviews for a product group (shared across size variants, keyed by name).
+ * Reviews are first-party sample content served from the data layer in both
+ * backends — there is no user-generated write path yet.
+ */
+export function getProductReviews(productName: string): ReviewSummary {
+  const list = reviews
+    .filter((r) => r.productName === productName)
+    .sort((a, b) => (a.date < b.date ? 1 : -1));
+  const average =
+    list.length === 0
+      ? 0
+      : Math.round((list.reduce((s, r) => s + r.rating, 0) / list.length) * 10) / 10;
+  return { count: list.length, average, reviews: list };
 }

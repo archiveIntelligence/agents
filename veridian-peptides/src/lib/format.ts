@@ -34,6 +34,24 @@ export function formatDate(iso: string, locale = "en-IE"): string {
   }).format(new Date(iso));
 }
 
+/** Coarse "x days/weeks/months ago" label — surfaces review recency. */
+export function relativeDate(iso: string, now: Date = new Date()): string {
+  const days = Math.max(0, Math.floor((now.getTime() - new Date(iso).getTime()) / 86400000));
+  if (days <= 0) return "today";
+  if (days === 1) return "yesterday";
+  if (days < 7) return `${days} days ago`;
+  if (days < 30) {
+    const w = Math.floor(days / 7);
+    return `${w} week${w === 1 ? "" : "s"} ago`;
+  }
+  if (days < 365) {
+    const m = Math.floor(days / 30);
+    return `${m} month${m === 1 ? "" : "s"} ago`;
+  }
+  const y = Math.floor(days / 365);
+  return `${y} year${y === 1 ? "" : "s"} ago`;
+}
+
 export function stockLabel(stock: string): { text: string; tone: "ok" | "warn" | "off" } {
   switch (stock) {
     case "in_stock":
