@@ -276,8 +276,10 @@ export function HeroShader({
       const t = (now - start) / 1000;
       // smooth cursor + velocity estimate
       const px = mouse.x, py = mouse.y;
-      mouse.x += (mouse.tx - mouse.x) * 0.08;
-      mouse.y += (mouse.ty - mouse.y) * 0.08;
+      // Snappy cursor follow (~10× tighter than the original easing) so the
+      // luminous focus tracks the pointer almost immediately.
+      mouse.x += (mouse.tx - mouse.x) * 0.8;
+      mouse.y += (mouse.ty - mouse.y) * 0.8;
       const d = Math.hypot(mouse.x - px, mouse.y - py) / Math.max(h, 1);
       mouse.vel += (Math.min(d * 14, 1.5) - mouse.vel) * 0.2;
       gl.uniform2f(u.res, w, h);
