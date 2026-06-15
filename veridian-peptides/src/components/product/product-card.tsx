@@ -3,7 +3,7 @@ import type { Product } from "@/lib/types";
 import { stockLabel, discountPercent } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { Price } from "@/components/i18n/price";
-import { VialImage } from "@/components/product/vial-image";
+import { ProductImage } from "@/components/product/product-image";
 
 const toneMap = { ok: "ok", warn: "warn", off: "off" } as const;
 
@@ -24,12 +24,14 @@ export function ProductCard({
       className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
     >
       <div className="relative aspect-[4/3]">
-        <VialImage
+        <ProductImage
           name={product.name}
           size={product.size}
+          slug={product.slug}
+          showSize={false}
           className="h-full w-full transition-transform duration-500 group-hover:scale-105"
         />
-        <span className="absolute left-3 top-3">
+        <span className="absolute left-3 top-3 z-10">
           <Badge tone="brand">{product.purity}% purity</Badge>
         </span>
       </div>

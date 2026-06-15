@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Price } from "@/components/i18n/price";
-import { VialImage } from "@/components/product/vial-image";
+import { ProductImage } from "@/components/product/product-image";
 import { useCart } from "@/lib/cart/cart-context";
 
 export interface StackItem {
@@ -55,9 +55,11 @@ export function StackCard({ name, description, savingsPercent, items }: StackCar
             className="group/item shrink-0"
             title={`${p.name} ${p.size}`}
           >
-            <VialImage
+            <ProductImage
               name={p.name}
               size={p.size}
+              slug={p.slug}
+              showSize={false}
               className="h-24 w-20 rounded-xl border border-border transition-transform group-hover/item:-translate-y-0.5"
             />
           </Link>

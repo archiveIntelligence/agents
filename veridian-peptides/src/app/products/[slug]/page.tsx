@@ -8,7 +8,7 @@ import { StickyBuyBar } from "@/components/product/sticky-buy-bar";
 import { ProductCard } from "@/components/product/product-card";
 import { ProductHighlights } from "@/components/product/product-highlights";
 import { ProductMonograph } from "@/components/product/product-monograph";
-import { VialImage } from "@/components/product/vial-image";
+import { ProductImage } from "@/components/product/product-image";
 import { ProductReviews } from "@/components/product/product-reviews";
 import { CompleteThePack, type PackItem } from "@/components/product/complete-the-pack";
 import { StarRating } from "@/components/product/star-rating";
@@ -149,9 +149,10 @@ export default async function ProductPage({
 
       <div className="grid gap-10 lg:grid-cols-2">
         {/* Visual */}
-        <VialImage
+        <ProductImage
           name={product.name}
           size={product.size}
+          slug={product.slug}
           className="aspect-square rounded-2xl border border-border shadow-soft"
         />
 
