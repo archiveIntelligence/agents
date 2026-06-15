@@ -31,7 +31,7 @@ export default async function VerifyPage({
             type="text"
             name="batch"
             defaultValue={batch ?? ""}
-            placeholder="e.g. VP24-GLP-7781"
+            placeholder="e.g. VP-TIRZ-2601"
             className="h-11 flex-1 rounded-full border border-border bg-surface px-4 font-mono text-sm focus-visible:outline-2 focus-visible:outline-ring"
           />
           <button className="h-11 rounded-full bg-brand-700 px-6 text-sm font-medium text-white hover:bg-brand-700">

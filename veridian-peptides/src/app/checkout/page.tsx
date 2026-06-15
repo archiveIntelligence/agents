@@ -8,6 +8,7 @@ import { useCurrency } from "@/components/i18n/currency-provider";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { OrderSummary } from "@/components/cart/order-summary";
 import { IncentiveMeter } from "@/components/cart/incentive-meter";
+import { TrustBadges } from "@/components/ui/trust-badges";
 import { placeOrder, type PaymentMethod } from "@/lib/cart/actions";
 import type { PaymentInitiation } from "@/lib/payments/types";
 
@@ -235,17 +236,7 @@ export default function CheckoutPage() {
           <Link href="/cart" className="block text-center text-sm text-muted-foreground hover:text-foreground">
             Edit cart
           </Link>
-          <ul className="space-y-2 border-t border-border pt-4 text-sm text-muted-foreground">
-            {[
-              "Independent HPLC certificate for every batch",
-              "Encrypted, secure checkout",
-              "Tracked, discreet EU dispatch",
-            ].map((item) => (
-              <li key={item} className="flex items-center gap-2">
-                <TrustTick /> {item}
-              </li>
-            ))}
-          </ul>
+          <TrustBadges variant="list" className="border-t border-border pt-4" />
         </aside>
       </div>
     </div>
@@ -340,15 +331,6 @@ function PaymentOption({
         <span className="block text-sm text-muted-foreground">{desc}</span>
       </span>
     </button>
-  );
-}
-
-function TrustTick() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="flex-none">
-      <circle cx="8" cy="8" r="8" fill="var(--color-brand-100)" />
-      <path d="M4.5 8.2l2.2 2.2 4.8-4.9" stroke="var(--color-brand-700)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }
 

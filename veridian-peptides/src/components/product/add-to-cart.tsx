@@ -47,12 +47,24 @@ export function AddToCart({
         </button>
       </div>
 
-      <Button size="lg" onClick={handleAdd} disabled={disabled}>
+      {/* One unambiguous primary action (Hick's Law); "View cart" stays quiet
+          until the buyer has acted. */}
+      <Button
+        size="lg"
+        onClick={handleAdd}
+        disabled={disabled}
+        className={added ? "bg-brand-800" : undefined}
+      >
         {added ? "Added ✓" : label}
       </Button>
-      <Button size="lg" variant="secondary" onClick={() => router.push("/cart")}>
-        View cart
+      <Button size="lg" variant="ghost" onClick={() => router.push("/cart")}>
+        View cart →
       </Button>
+
+      {/* Polite live region so assistive tech announces the add. */}
+      <p aria-live="polite" className="sr-only">
+        {added ? `${qty} added to cart` : ""}
+      </p>
     </div>
   );
 }

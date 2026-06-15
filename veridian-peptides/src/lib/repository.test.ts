@@ -23,15 +23,15 @@ describe("getProducts (seed backend)", () => {
   });
 
   it("matches a free-text search", async () => {
-    const result = await getProducts({ search: "recovery" });
+    const result = await getProducts({ search: "tirzepatide" });
     expect(result.length).toBeGreaterThan(0);
   });
 });
 
 describe("verifyCoa (seed backend)", () => {
   it("resolves a known batch case-insensitively", async () => {
-    const coa = await verifyCoa("vp24-glp-7781");
-    expect(coa?.batch).toBe("VP24-GLP-7781");
+    const coa = await verifyCoa("vp-tirz-2601");
+    expect(coa?.batch).toBe("VP-TIRZ-2601");
   });
 
   it("returns undefined for an unknown batch", async () => {

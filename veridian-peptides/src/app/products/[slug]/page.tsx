@@ -2,7 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
+import { TrustBadges } from "@/components/ui/trust-badges";
 import { AddToCart } from "@/components/product/add-to-cart";
+import { StickyBuyBar } from "@/components/product/sticky-buy-bar";
 import { ProductCard } from "@/components/product/product-card";
 import { VialImage } from "@/components/product/vial-image";
 import {
@@ -13,7 +15,7 @@ import {
   getRelatedProducts,
 } from "@/lib/repository";
 import { products } from "@/lib/data";
-import { stockLabel, discountPercent, pricePerMgCents } from "@/lib/format";
+import { stockLabel, discountPercent, pricePerMgCents, formatDate } from "@/lib/format";
 import { Price } from "@/components/i18n/price";
 import { BULK_DISCOUNT_THRESHOLD, BULK_DISCOUNT_RATE } from "@/lib/cart/pricing";
 
@@ -186,7 +188,20 @@ export default async function ProductPage({
             </p>
           ) : null}
 
-          <div className="mt-6">
+          {/* Authority signal close to the CTA — recency from the real batch
+              test date, not invented "X bought today" social proof. */}
+          {coa ? (
+            <p className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-brand-800">
+              <span className="inline-flex items-center gap-1.5 font-medium">
+                <VerifiedSeal /> Independently verified — {product.purity}% purity
+              </span>
+              <span className="text-muted-foreground">
+                batch {coa.batch}, last tested {formatDate(coa.testedOn)}
+              </span>
+            </p>
+          ) : null}
+
+          <div className="mt-4">
             <AddToCart
               slug={product.slug}
               label={product.stock === "pre_order" ? "Pre-order" : "Add to cart"}
@@ -205,19 +220,8 @@ export default async function ProductPage({
             </span>
           </div>
 
-          {/* Authority / risk-reversal row */}
-          <ul className="mt-6 grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
-            {[
-              "Independent HPLC purity report",
-              "Public certificate of analysis",
-              "Tracked EU shipping",
-              "Discreet, temperature-aware dispatch",
-            ].map((item) => (
-              <li key={item} className="flex items-center gap-2 text-muted-foreground">
-                <CheckMark /> {item}
-              </li>
-            ))}
-          </ul>
+          {/* Authority / risk-reversal cluster — shared, benefit-led copy */}
+          <TrustBadges variant="grid" className="mt-6" />
 
           <div className="mt-10">
             <h2 className="eyebrow">Description</h2>
@@ -262,15 +266,34 @@ export default async function ProductPage({
           </div>
         </section>
       ) : null}
+
+      {/* Spacer so the mobile sticky buy bar never overlaps page content. */}
+      <div className="h-20 lg:hidden" aria-hidden="true" />
+      <StickyBuyBar
+        slug={product.slug}
+        name={product.name}
+        size={product.size}
+        priceCents={product.priceCents}
+        compareAtCents={product.compareAtCents}
+        savePct={savePct}
+        label={product.stock === "pre_order" ? "Pre-order" : "Add to cart"}
+        disabled={product.stock === "out_of_stock"}
+      />
     </div>
   );
 }
 
-function CheckMark() {
+function VerifiedSeal() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="flex-none">
-      <circle cx="8" cy="8" r="8" fill="var(--color-brand-100)" />
-      <path d="M4.5 8.2l2.2 2.2 4.8-4.9" stroke="var(--color-brand-700)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M8 1l1.8 1.1 2.1-.3.6 2 1.7 1.3-.9 1.9.9 1.9-1.7 1.3-.6 2-2.1-.3L8 15l-1.8-1.1-2.1.3-.6-2-1.7-1.3.9-1.9-.9-1.9 1.7-1.3.6-2 2.1.3L8 1z"
+        fill="var(--color-brand-100)"
+        stroke="var(--color-brand-700)"
+        strokeWidth="1"
+        strokeLinejoin="round"
+      />
+      <path d="M5.4 8.1l1.7 1.7 3.5-3.6" stroke="var(--color-brand-700)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

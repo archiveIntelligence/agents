@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Product } from "@/lib/types";
-import { stockLabel } from "@/lib/format";
+import { stockLabel, discountPercent } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { Price } from "@/components/i18n/price";
 import { VialImage } from "@/components/product/vial-image";
@@ -17,6 +17,7 @@ export function ProductCard({
 }) {
   const stock = stockLabel(product.stock);
   const isGroup = sizeCount > 1;
+  const savePct = discountPercent(product.priceCents, product.compareAtCents);
   return (
     <Link
       href={`/products/${product.slug}`}
@@ -45,7 +46,12 @@ export function ProductCard({
             {isGroup ? <span className="mr-1 text-xs text-muted-foreground">from</span> : null}
             <Price cents={product.priceCents} className="text-lg font-semibold" />
             {product.compareAtCents ? (
-              <Price cents={product.compareAtCents} strike className="ml-2 text-sm" />
+              <span className="ml-2 inline-flex items-baseline gap-1">
+                <Price cents={product.compareAtCents} strike className="text-sm" />
+                {savePct ? (
+                  <span className="text-xs font-semibold text-brand-700">−{savePct}%</span>
+                ) : null}
+              </span>
             ) : null}
           </div>
           <span className="text-xs text-muted-foreground">

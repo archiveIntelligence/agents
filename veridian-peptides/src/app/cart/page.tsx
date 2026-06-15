@@ -6,6 +6,7 @@ import { useCurrency } from "@/components/i18n/currency-provider";
 import { ButtonLink } from "@/components/ui/button";
 import { OrderSummary } from "@/components/cart/order-summary";
 import { IncentiveMeter } from "@/components/cart/incentive-meter";
+import { TrustBadges } from "@/components/ui/trust-badges";
 import { discountPercent } from "@/lib/format";
 
 export default function CartPage() {
@@ -107,25 +108,12 @@ export default function CartPage() {
           <ButtonLink href="/checkout" size="lg" className="w-full">
             Proceed to checkout
           </ButtonLink>
-          <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
-            <span className="inline-flex items-center gap-1"><Lock /> Secure checkout</span>
-            <span>·</span>
-            <span>Tracked EU shipping</span>
-          </div>
+          <TrustBadges variant="list" className="border-t border-border pt-4" />
           <p className="text-center text-xs text-muted-foreground">
             For research use only. Not for human consumption.
           </p>
         </aside>
       </div>
     </div>
-  );
-}
-
-function Lock() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <rect x="3" y="7" width="10" height="7" rx="1.5" fill="var(--color-brand-700)" />
-      <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="var(--color-brand-700)" strokeWidth="1.5" fill="none" />
-    </svg>
   );
 }
