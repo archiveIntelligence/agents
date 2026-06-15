@@ -11,6 +11,25 @@ export interface Category {
   description: string;
 }
 
+// Authored as object-literal `type` aliases (not interfaces) so they carry an
+// implicit index signature and stay assignable to Prisma's JSON input type when
+// persisted to the `highlights`/`monograph` Json columns.
+
+/** Short, skimmable buzzword bullet shown at the top of the PDP. */
+export type ProductHighlight = {
+  /** Icon key resolved to an inline SVG glyph in the UI (no icon-font dep). */
+  icon: string;
+  /** Punchy label, e.g. "Triple-receptor agonist" or "HPLC ≥99%". */
+  label: string;
+};
+
+/** One section of the long "package insert" monograph. */
+export type MonographSection = {
+  heading: string;
+  /** Plain text; supports blank-line paragraphs and "- " bullet lines. */
+  body: string;
+};
+
 export interface Product {
   slug: string;
   name: string;
@@ -33,6 +52,10 @@ export interface Product {
   featured?: boolean;
   /** Research-use specs shown on the PDP. */
   specs: { label: string; value: string }[];
+  /** Punchy buzzword bullets shown first on the PDP (3–5 items). */
+  highlights: ProductHighlight[];
+  /** Long "package insert"-style monograph, revealed in an accordion. */
+  monograph?: MonographSection[];
 }
 
 export interface Bundle {

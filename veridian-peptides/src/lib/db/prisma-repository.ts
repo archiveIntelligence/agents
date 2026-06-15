@@ -3,7 +3,9 @@ import type {
   BlogPost,
   Category,
   Coa,
+  MonographSection,
   Product,
+  ProductHighlight,
   StockStatus,
 } from "@/lib/types";
 import type { ProductQuery } from "@/lib/repository";
@@ -31,6 +33,8 @@ type ProductRow = {
   stock: string;
   featured: boolean;
   specs: unknown;
+  highlights: unknown;
+  monograph: unknown;
   category: { slug: string };
   coas: { batch: string }[];
 };
@@ -50,6 +54,8 @@ function toProduct(row: ProductRow): Product {
     coaBatches: row.coas.map((c) => c.batch),
     featured: row.featured,
     specs: (row.specs as { label: string; value: string }[]) ?? [],
+    highlights: (row.highlights as ProductHighlight[]) ?? [],
+    monograph: (row.monograph as MonographSection[] | null) ?? undefined,
   };
 }
 

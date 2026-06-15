@@ -82,6 +82,10 @@ model Product {
   stock          StockStatus @default(IN_STOCK)
   featured       Boolean     @default(false)
   specs          Json        @default("[]")
+  // Skimmable buzzword bullets ({ icon, label }[]) shown first on the PDP.
+  highlights     Json        @default("[]")
+  // Long package-insert monograph ({ heading, body }[]); null when not authored.
+  monograph      Json?
 
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId String

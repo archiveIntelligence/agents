@@ -6,6 +6,8 @@ import { TrustBadges } from "@/components/ui/trust-badges";
 import { AddToCart } from "@/components/product/add-to-cart";
 import { StickyBuyBar } from "@/components/product/sticky-buy-bar";
 import { ProductCard } from "@/components/product/product-card";
+import { ProductHighlights } from "@/components/product/product-highlights";
+import { ProductMonograph } from "@/components/product/product-monograph";
 import { VialImage } from "@/components/product/vial-image";
 import {
   getCategory,
@@ -131,6 +133,9 @@ export default async function ProductPage({
           <h1 className="mt-4 text-4xl tracking-tight">{product.name}</h1>
           <p className="mt-3 text-lg leading-relaxed text-muted-foreground">{product.tagline}</p>
 
+          {/* Lead with skimmable buzzword highlights — minimal text, icons. */}
+          <ProductHighlights highlights={product.highlights} />
+
           <div className="mt-6 flex flex-wrap items-end gap-3">
             <Price cents={product.priceCents} className="font-display text-4xl text-foreground" />
             {product.compareAtCents ? (
@@ -238,6 +243,12 @@ export default async function ProductPage({
                 </div>
               ))}
             </dl>
+
+            {/* Depth for those who want it: the full package-insert monograph,
+                collapsed by default behind an accessible accordion. */}
+            {product.monograph && product.monograph.length > 0 ? (
+              <ProductMonograph sections={product.monograph} />
+            ) : null}
           </div>
 
           {coa ? (

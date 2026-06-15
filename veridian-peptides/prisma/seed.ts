@@ -56,6 +56,8 @@ async function main() {
         stock: stockMap[p.stock],
         featured: p.featured ?? false,
         specs: p.specs,
+        highlights: p.highlights,
+        monograph: p.monograph ?? undefined,
         categoryId: categoryIdBySlug.get(p.categorySlug)!,
       },
     });
