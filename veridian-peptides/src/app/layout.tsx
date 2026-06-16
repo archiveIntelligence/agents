@@ -9,6 +9,7 @@ import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { CookieConsent } from "@/components/layout/cookie-consent";
 import { getCurrency, getLocale } from "@/lib/i18n/server";
 import { isRTL } from "@/lib/i18n/locale";
+import { SITE_URL, SUPPORT_EMAIL } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,8 +28,6 @@ const fraunces = Fraunces({
   subsets: ["latin"],
   style: ["normal", "italic"],
 });
-
-const SITE_URL = "https://verum-biolabs.test";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -54,7 +53,7 @@ const organizationJsonLd = {
     "Independently HPLC-tested research peptides with a public certificate-of-analysis vault.",
   contactPoint: {
     "@type": "ContactPoint",
-    email: "support@verum-biolabs.test",
+    email: SUPPORT_EMAIL,
     contactType: "customer support",
   },
 };

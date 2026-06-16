@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getBlogPosts, getCategories, getProducts } from "@/lib/repository";
-
-const SITE_URL = "https://verum-biolabs.test";
+import { SITE_URL } from "@/lib/site";
 
 const STATIC_PATHS = [
   "",

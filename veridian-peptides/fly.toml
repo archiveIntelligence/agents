@@ -1,6 +1,6 @@
 # Fly.io deployment. Builds the Dockerfile in this directory.
 # Set secrets with: fly secrets set DATABASE_URL=... NOWPAYMENTS_API_KEY=...
-app = "veridian-peptides"
+app = "verum-biolabs"
 primary_region = "fra"
 
 [build]
