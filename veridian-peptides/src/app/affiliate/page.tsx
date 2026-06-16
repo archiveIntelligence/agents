@@ -21,7 +21,7 @@ export default function AffiliatePage() {
       </ol>
       <h2>Apply</h2>
       <form
-        action="mailto:affiliates@veridian-peptides.test"
+        action="mailto:affiliates@verum-biolabs.test"
         method="post"
         encType="text/plain"
         className="space-y-4 rounded-2xl border border-border bg-surface p-6"

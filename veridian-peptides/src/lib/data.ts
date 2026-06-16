@@ -940,6 +940,132 @@ const catalog: GroupDef[] = [
     ],
     sizes: [["30ml", 1000, null]],
   },
+  {
+    base: "insulin-syringes",
+    name: "Insulin Syringes",
+    category: "lab-supplies",
+    tagline: "U-100 · 31G · 0.5 ml — precise low-volume draws",
+    description:
+      "Sterile single-use U-100 insulin syringes with a fine 31G needle for accurate low-volume measurement and transfer of reconstituted research solutions. For laboratory use.",
+    purity: 100,
+    specs: [
+      { label: "Gauge", value: "31G" },
+      { label: "Volume", value: "0.5 ml" },
+      { label: "Graduation", value: "U-100" },
+      { label: "Quantity", value: "100 per box" },
+    ],
+    highlights: [
+      { icon: "droplet", label: "Fine 31G needle" },
+      { icon: "purity", label: "Sterile, single-use" },
+      { icon: "vial", label: "0.5 ml U-100" },
+      { icon: "shield", label: "Box of 100" },
+    ],
+    sizes: [["100pack", 2200, null]],
+  },
+  {
+    base: "luer-lock-syringes",
+    name: "Luer-Lock Syringes",
+    category: "lab-supplies",
+    tagline: "3 ml · secure luer-lock — transfer & measuring",
+    description:
+      "Sterile 3 ml luer-lock syringes with detachable needle for measuring, mixing and transferring reconstitution fluids without leakage. For laboratory use.",
+    purity: 100,
+    specs: [
+      { label: "Volume", value: "3 ml" },
+      { label: "Fitting", value: "Luer-lock" },
+      { label: "Needle", value: "21G detachable" },
+      { label: "Quantity", value: "10 per pack" },
+    ],
+    highlights: [
+      { icon: "purity", label: "Sterile, single-use" },
+      { icon: "shield", label: "Secure luer-lock" },
+      { icon: "droplet", label: "Detachable needle" },
+      { icon: "vial", label: "3 ml barrel" },
+    ],
+    sizes: [["10pack", 1400, null]],
+  },
+  {
+    base: "empty-sterile-vials",
+    name: "Empty Sterile Vials",
+    category: "lab-supplies",
+    tagline: "10 ml clear glass — crimp-top, stoppered",
+    description:
+      "Empty sterile 10 ml borosilicate vials with grey rubber stoppers and aluminium crimp caps for storing reconstituted or aliquoted research solutions. For laboratory use.",
+    purity: 100,
+    specs: [
+      { label: "Volume", value: "10 ml" },
+      { label: "Glass", value: "Type I borosilicate" },
+      { label: "Closure", value: "Stopper + crimp cap" },
+      { label: "Quantity", value: "10 per pack" },
+    ],
+    highlights: [
+      { icon: "vial", label: "10 ml borosilicate" },
+      { icon: "shield", label: "Crimp-top sealed" },
+      { icon: "purity", label: "Sterile" },
+      { icon: "snowflake", label: "Freezer-safe storage" },
+    ],
+    sizes: [["10pack", 1600, null]],
+  },
+  {
+    base: "alcohol-prep-pads",
+    name: "Alcohol Prep Pads",
+    category: "lab-supplies",
+    tagline: "70% isopropyl — sterile surface & septum wipes",
+    description:
+      "Individually wrapped 70% isopropyl alcohol pads for disinfecting vial septa and work surfaces during reconstitution. For laboratory use.",
+    purity: 100,
+    specs: [
+      { label: "Agent", value: "70% isopropyl alcohol" },
+      { label: "Format", value: "Individually wrapped" },
+      { label: "Quantity", value: "100 per box" },
+    ],
+    highlights: [
+      { icon: "droplet", label: "70% isopropyl" },
+      { icon: "shield", label: "Individually sealed" },
+      { icon: "purity", label: "Sterile wipes" },
+    ],
+    sizes: [["100pack", 700, null]],
+  },
+  {
+    base: "empty-peptide-pen",
+    name: "Empty Peptide Pen",
+    category: "lab-supplies",
+    tagline: "Refillable dosing pen — fine micro-adjust dial",
+    description:
+      "Refillable, reusable dosing pen for accurate micro-volume dispensing of reconstituted research solutions in the lab. Supplied empty. For laboratory use.",
+    purity: 100,
+    specs: [
+      { label: "Type", value: "Refillable / reusable" },
+      { label: "Adjustment", value: "Fine micro-dial" },
+      { label: "Cartridge", value: "Standard 3 ml" },
+    ],
+    highlights: [
+      { icon: "purity", label: "Precise micro-dosing" },
+      { icon: "vial", label: "Refillable cartridge" },
+      { icon: "shield", label: "Reusable build" },
+    ],
+    sizes: [["each", 3400, null]],
+  },
+  {
+    base: "reconstitution-kit",
+    name: "Reconstitution Kit",
+    category: "lab-supplies",
+    tagline: "Everything for one clean reconstitution session",
+    description:
+      "A complete bench kit: bacteriostatic water, insulin syringes, empty sterile vials and alcohol prep pads — everything needed to reconstitute and aliquot a research peptide cleanly. For laboratory use.",
+    purity: 100,
+    specs: [
+      { label: "Includes", value: "Bac water, syringes, vials, pads" },
+      { label: "Sessions", value: "Multi-draw ready" },
+    ],
+    highlights: [
+      { icon: "blend", label: "All-in-one bench kit" },
+      { icon: "water", label: "Bacteriostatic water" },
+      { icon: "droplet", label: "Syringes & pads" },
+      { icon: "vial", label: "Storage vials" },
+    ],
+    sizes: [["kit", 2900, null]],
+  },
 ];
 
 function variantSlug(base: string, size: string): string {

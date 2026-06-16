@@ -1,4 +1,4 @@
-// Domain types for the Veridian Peptides storefront.
+// Domain types for the VERUM Biolabs storefront.
 // These mirror the eventual database schema so the seed-backed
 // repository can later be swapped for Prisma/Postgres without
 // touching the presentation layer.

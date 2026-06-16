@@ -12,7 +12,7 @@ export const sepaProvider: PaymentProvider = {
       title: "SEPA bank transfer",
       lines: [
         `Amount: ${formatPrice(order.totalCents)}`,
-        "Account holder: Veridian Labs",
+        "Account holder: VERUM Biolabs",
         "IBAN: DE00 0000 0000 0000 0000 00 (sandbox)",
         "BIC: XXXXDEXXXXX",
         `Reference: ${order.reference}`,

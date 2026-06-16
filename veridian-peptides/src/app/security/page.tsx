@@ -24,7 +24,7 @@ export default function SecurityPage() {
       <h2>Reporting</h2>
       <p>
         If you see a site or message impersonating us, email{" "}
-        <a href="mailto:security@veridian-peptides.test">security@veridian-peptides.test</a>.
+        <a href="mailto:security@verum-biolabs.test">security@verum-biolabs.test</a>.
       </p>
     </PageShell>
   );

@@ -3,6 +3,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProductCard } from "@/components/product/product-card";
 import { HeroShader } from "@/components/hero/hero-shader";
+import { SceneImage } from "@/components/media/scene-image";
 import {
   getAveragePurity,
   getBlogPosts,
@@ -25,7 +26,7 @@ export default async function HomePage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border">
-        {/* Interactive shader background (ported from the Veridian Hero design) */}
+        {/* Interactive shader background (ported from the VERUM hero design) */}
         <div className="absolute inset-0 -z-20 bg-background">
           <HeroShader variant="marble" className="h-full w-full" />
         </div>
@@ -72,9 +73,9 @@ export default async function HomePage() {
       {/* Trust bar */}
       <section className="border-b border-border bg-surface">
         <div className="container-px grid gap-6 py-8 text-sm sm:grid-cols-3">
-          <TrustItem title="Independent lab testing" desc="Third-party HPLC reports for every batch." />
-          <TrustItem title="Batch verification" desc="Confirm any COA by its batch number." />
-          <TrustItem title="Cold-chain dispatch" desc="Temperature-aware handling and tracking." />
+          <TrustItem title={t("home.trust.testing.title")} desc={t("home.trust.testing.desc")} />
+          <TrustItem title={t("home.trust.verify.title")} desc={t("home.trust.verify.desc")} />
+          <TrustItem title={t("home.trust.coldchain.title")} desc={t("home.trust.coldchain.desc")} />
         </div>
       </section>
 
@@ -92,19 +93,17 @@ export default async function HomePage() {
       <section className="border-y border-border bg-surface">
         <div className="container-px grid gap-8 py-16 lg:grid-cols-2 lg:items-center">
           <div>
-            <Badge tone="brand">Quality &amp; Testing</Badge>
+            <Badge tone="brand">{t("home.coa.badge")}</Badge>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight">
-              Transparency, batch by batch
+              {t("home.coa.title")}
             </h2>
             <p className="mt-4 max-w-md text-muted-foreground">
-              We publish the certificate of analysis for every batch we sell.
-              Search the vault, read the HPLC purity figures, and verify the
-              report independently — before you ever place an order.
+              {t("home.coa.lead")}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <ButtonLink href="/coa">Open the COA vault</ButtonLink>
+              <ButtonLink href="/coa">{t("home.coa.openVault")}</ButtonLink>
               <ButtonLink href="/coa/verify" variant="secondary">
-                Verify a batch
+                {t("home.coa.verify")}
               </ButtonLink>
             </div>
           </div>
@@ -131,10 +130,18 @@ export default async function HomePage() {
             <Link
               key={cat.slug}
               href={`/products?category=${cat.slug}`}
-              className="group rounded-2xl border border-border bg-surface p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
             >
-              <h3 className="text-lg transition-colors group-hover:text-brand-700">{cat.name}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cat.description}</p>
+              <SceneImage
+                src={`/categories/${cat.slug}.png`}
+                alt={cat.name}
+                className="aspect-[4/3]"
+                imgClassName="transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="p-6">
+                <h3 className="text-lg transition-colors group-hover:text-brand-700">{cat.name}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cat.description}</p>
+              </div>
             </Link>
           ))}
         </div>
@@ -148,14 +155,22 @@ export default async function HomePage() {
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="group flex flex-col rounded-2xl border border-border bg-surface p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
             >
-              <Badge tone="neutral">{post.category}</Badge>
-              <h3 className="mt-4 text-lg leading-snug transition-colors group-hover:text-brand-700">{post.title}</h3>
-              <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{post.excerpt}</p>
-              <span className="mt-4 text-xs text-muted-foreground">
-                {formatDate(post.publishedOn)} · {post.readingMinutes} min read
-              </span>
+              <SceneImage
+                src={`/blog/${post.slug}.png`}
+                alt={post.title}
+                className="aspect-[16/9]"
+                imgClassName="transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="flex flex-1 flex-col p-6">
+                <Badge tone="neutral">{post.category}</Badge>
+                <h3 className="mt-4 text-lg leading-snug transition-colors group-hover:text-brand-700">{post.title}</h3>
+                <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{post.excerpt}</p>
+                <span className="mt-4 text-xs text-muted-foreground">
+                  {formatDate(post.publishedOn)} · {post.readingMinutes} min read
+                </span>
+              </div>
             </Link>
           ))}
         </div>

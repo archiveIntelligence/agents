@@ -11,11 +11,13 @@ export function LanguageSwitcher() {
       <select
         value={locale}
         onChange={(e) => setLocale(e.target.value as Locale)}
-        className="h-9 rounded-full border border-border bg-surface px-2 text-sm text-muted-foreground"
+        aria-label="Language"
+        title="Language"
+        className="h-9 max-w-[9rem] rounded-full border border-border bg-surface px-2 text-sm text-muted-foreground"
       >
         {LOCALES.map((l) => (
           <option key={l.code} value={l.code}>
-            {l.label}
+            {l.native}
           </option>
         ))}
       </select>

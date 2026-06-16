@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ProductCard } from "@/components/product/product-card";
+import { SceneImage } from "@/components/media/scene-image";
 import { getCategories, getProducts, type ProductQuery } from "@/lib/repository";
 
 export const metadata: Metadata = {
@@ -56,14 +57,42 @@ export default async function ProductsPage({
     return qs ? `/products?${qs}` : "/products";
   };
 
+  const activeCategory = sp.category
+    ? categories.find((c) => c.slug === sp.category)
+    : undefined;
+
   return (
     <div className="container-px py-12">
-      <header className="mb-10">
-        <h1 className="text-4xl tracking-tight">All research peptides</h1>
-        <p className="mt-3 text-muted-foreground">
-          {results.length} product{results.length === 1 ? "" : "s"} · for research use only
-        </p>
-      </header>
+      {activeCategory ? (
+        <header className="mb-10 overflow-hidden rounded-3xl border border-border shadow-soft">
+          <div className="relative">
+            <SceneImage
+              src={`/categories/${activeCategory.slug}.png`}
+              alt={activeCategory.name}
+              className="aspect-[16/6] sm:aspect-[16/5]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-ink-950/55 via-ink-950/20 to-transparent" />
+            <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8">
+              <h1 className="max-w-xl text-3xl tracking-tight text-white sm:text-4xl">
+                {activeCategory.name}
+              </h1>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/85">
+                {activeCategory.description}
+              </p>
+              <p className="mt-3 text-xs text-white/70">
+                {results.length} product{results.length === 1 ? "" : "s"} · for research use only
+              </p>
+            </div>
+          </div>
+        </header>
+      ) : (
+        <header className="mb-10">
+          <h1 className="text-4xl tracking-tight">All research peptides</h1>
+          <p className="mt-3 text-muted-foreground">
+            {results.length} product{results.length === 1 ? "" : "s"} · for research use only
+          </p>
+        </header>
+      )}
 
       <div className="grid gap-8 lg:grid-cols-[16rem_1fr]">
         {/* Filters */}

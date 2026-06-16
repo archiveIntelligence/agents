@@ -78,8 +78,8 @@ export async function Footer() {
       </div>
       <div className="border-t border-border">
         <div className="container-px flex flex-col gap-2 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Veridian Peptides. {t("footer.rights")}</p>
-          <p>support@veridian-peptides.test</p>
+          <p>© {new Date().getFullYear()} VERUM Biolabs. {t("footer.rights")}</p>
+          <p>support@verum-biolabs.test</p>
         </div>
       </div>
     </footer>

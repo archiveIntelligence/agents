@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getBlogPosts, getCategories, getProducts } from "@/lib/repository";
 
-const SITE_URL = "https://veridian-peptides.test";
+const SITE_URL = "https://verum-biolabs.test";
 
 const STATIC_PATHS = [
   "",

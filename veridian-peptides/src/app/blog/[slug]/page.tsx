@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { SceneImage } from "@/components/media/scene-image";
 import { getBlogPost } from "@/lib/repository";
 import { formatDate } from "@/lib/format";
 
@@ -42,6 +43,11 @@ export default async function BlogPostPage({
           <p className="mt-4 text-sm text-muted-foreground">
             {formatDate(post.publishedOn)} · {post.readingMinutes} min read
           </p>
+          <SceneImage
+            src={`/blog/${post.slug}.png`}
+            alt={post.title}
+            className="mt-8 aspect-[16/9] rounded-2xl border border-border shadow-soft"
+          />
         </header>
         <div className="space-y-5 text-[1.05rem] leading-relaxed text-muted-foreground">
           {renderBlocks(source)}

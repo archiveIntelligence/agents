@@ -34,7 +34,7 @@ export default function PrivacyPage() {
       <h2>Your rights</h2>
       <p>
         You may request access to, correction of, or deletion of your data by
-        contacting support@veridian-peptides.test.
+        contacting support@verum-biolabs.test.
       </p>
     </PageShell>
   );

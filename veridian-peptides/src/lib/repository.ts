@@ -8,6 +8,12 @@ import {
   reviews,
 } from "./data";
 import type { Bundle, BlogPost, Category, Coa, Product, Review } from "./types";
+import {
+  currentOverlay,
+  localizeBlogPost,
+  localizeCategory,
+  localizeProduct,
+} from "./i18n/localize";
 
 // Data-access layer with two interchangeable backends:
 //   - PostgreSQL via Prisma when DATABASE_URL is configured
@@ -30,17 +36,23 @@ export interface ProductQuery {
 }
 
 export async function getCategories(): Promise<Category[]> {
-  if (useDb) return (await db()).getCategories();
-  return categories;
+  const base = useDb ? await (await db()).getCategories() : categories;
+  const o = await currentOverlay();
+  return o ? base.map((c) => localizeCategory(c, o)) : base;
 }
 
 export async function getCategory(slug: string): Promise<Category | undefined> {
-  if (useDb) return (await db()).getCategory(slug);
-  return categories.find((c) => c.slug === slug);
+  const base = useDb ? await (await db()).getCategory(slug) : categories.find((c) => c.slug === slug);
+  const o = await currentOverlay();
+  return base && o ? localizeCategory(base, o) : base;
 }
 
 export async function getProducts(query: ProductQuery = {}): Promise<Product[]> {
-  if (useDb) return (await db()).getProducts(query);
+  const o = await currentOverlay();
+  if (useDb) {
+    const base = await (await db()).getProducts(query);
+    return o ? base.map((p) => localizeProduct(p, o)) : base;
+  }
 
   let result = [...products];
   if (query.category) result = result.filter((p) => p.categorySlug === query.category);
@@ -69,24 +81,29 @@ export async function getProducts(query: ProductQuery = {}): Promise<Product[]> 
     default:
       result.sort((a, b) => Number(b.featured ?? false) - Number(a.featured ?? false));
   }
-  return result;
+  return o ? result.map((p) => localizeProduct(p, o)) : result;
 }
 
 export async function getFeaturedProducts(): Promise<Product[]> {
-  if (useDb) return (await db()).getFeaturedProducts();
-  return products.filter((p) => p.featured);
+  const base = useDb ? await (await db()).getFeaturedProducts() : products.filter((p) => p.featured);
+  const o = await currentOverlay();
+  return o ? base.map((p) => localizeProduct(p, o)) : base;
 }
 
 export async function getProduct(slug: string): Promise<Product | undefined> {
-  if (useDb) return (await db()).getProduct(slug);
-  return products.find((p) => p.slug === slug);
+  const base = useDb ? await (await db()).getProduct(slug) : products.find((p) => p.slug === slug);
+  const o = await currentOverlay();
+  return base && o ? localizeProduct(base, o) : base;
 }
 
 export async function getRelatedProducts(product: Product): Promise<Product[]> {
-  if (useDb) return (await db()).getRelatedProducts(product);
-  return products
-    .filter((p) => p.categorySlug === product.categorySlug && p.slug !== product.slug)
-    .slice(0, 3);
+  const base = useDb
+    ? await (await db()).getRelatedProducts(product)
+    : products
+        .filter((p) => p.categorySlug === product.categorySlug && p.slug !== product.slug)
+        .slice(0, 3);
+  const o = await currentOverlay();
+  return o ? base.map((p) => localizeProduct(p, o)) : base;
 }
 
 export async function getBundles(): Promise<Bundle[]> {
@@ -109,13 +126,15 @@ export async function verifyCoa(batch: string): Promise<Coa | undefined> {
 }
 
 export async function getBlogPosts(): Promise<BlogPost[]> {
-  if (useDb) return (await db()).getBlogPosts();
-  return blogPosts;
+  const base = useDb ? await (await db()).getBlogPosts() : blogPosts;
+  const o = await currentOverlay();
+  return o ? base.map((b) => localizeBlogPost(b, o)) : base;
 }
 
 export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
-  if (useDb) return (await db()).getBlogPost(slug);
-  return blogPosts.find((p) => p.slug === slug);
+  const base = useDb ? await (await db()).getBlogPost(slug) : blogPosts.find((p) => p.slug === slug);
+  const o = await currentOverlay();
+  return base && o ? localizeBlogPost(base, o) : base;
 }
 
 export function getAveragePurity(): number {

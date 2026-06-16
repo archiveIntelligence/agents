@@ -1,5 +1,5 @@
 // Generate photoreal product vial images with a professionally designed
-// Veridian Peptides label via Gemini (Nano Banana Pro). One image per product
+// VERUM Biolabs label via Gemini (Nano Banana Pro). One image per product
 // group (size-independent); the mg is shown as a UI badge over the photo.
 //
 //   node --env-file=.env scripts/generate-product-photos.mjs            # all
@@ -51,7 +51,7 @@ function prompt(g) {
   return `Ultra-realistic professional pharmaceutical product photograph, studio quality, 1:1 square.
 A single small clear glass research vial with a brushed-aluminium crimp cap, standing upright and centered, containing ${fill}.
 On the vial is a beautifully designed, minimalist premium pharmaceutical label, perfectly straight and crisp:
-- top: a small emerald-green uppercase wordmark "VERIDIAN PEPTIDES" with a tiny check-mark logo
+- top: a small emerald-green uppercase wordmark "VERUM BIOLABS" with a tiny check-mark logo
 - center: the product name "${g.name}" in an elegant dark serif, large and legible
 - a thin emerald-green horizontal accent rule
 - a small monospaced line: "${specLine}"

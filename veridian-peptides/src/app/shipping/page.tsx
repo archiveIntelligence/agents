@@ -31,7 +31,7 @@ export default function ShippingPage() {
         Because these are research materials, we can only accept returns of
         unopened items in their original packaging within 14 days, where the
         cold chain has not been broken. Damaged or incorrect items are replaced
-        at no cost — contact <a href="mailto:support@veridian-peptides.test">support</a>.
+        at no cost — contact <a href="mailto:support@verum-biolabs.test">support</a>.
       </p>
     </PageShell>
   );

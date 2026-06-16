@@ -8,7 +8,7 @@
 import { useState } from "react";
 import { useCart } from "@/lib/cart/cart-context";
 import { useCurrency } from "@/components/i18n/currency-provider";
-import { VialImage } from "@/components/product/vial-image";
+import { ProductImage } from "@/components/product/product-image";
 
 export interface PackItem {
   slug: string;
@@ -44,9 +44,11 @@ export function CompleteThePack({ items }: { items: PackItem[] }) {
             <div key={it.slug} className="flex items-center gap-3">
               {i > 0 ? <span className="text-2xl font-light text-muted-foreground">+</span> : null}
               <div className="flex items-center gap-3">
-                <VialImage
+                <ProductImage
                   name={it.name}
                   size={it.size}
+                  slug={it.slug}
+                  showSize={false}
                   className="h-16 w-16 flex-none rounded-xl border border-border"
                 />
                 <div className="text-sm">

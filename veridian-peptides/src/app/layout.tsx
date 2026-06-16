@@ -8,6 +8,7 @@ import { CurrencyProvider } from "@/components/i18n/currency-provider";
 import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { CookieConsent } from "@/components/layout/cookie-consent";
 import { getCurrency, getLocale } from "@/lib/i18n/server";
+import { isRTL } from "@/lib/i18n/locale";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,19 +28,19 @@ const fraunces = Fraunces({
   style: ["normal", "italic"],
 });
 
-const SITE_URL = "https://veridian-peptides.test";
+const SITE_URL = "https://verum-biolabs.test";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Veridian Peptides — Independently Tested Research Peptides",
-    template: "%s · Veridian Peptides",
+    default: "VERUM Biolabs — Independently Tested Research Peptides",
+    template: "%s · VERUM Biolabs",
   },
   description:
     "European supplier of independently HPLC-tested research peptides. Public certificate-of-analysis vault, batch verification and fast EU shipping. For research use only.",
   openGraph: {
     type: "website",
-    siteName: "Veridian Peptides",
+    siteName: "VERUM Biolabs",
   },
   alternates: { canonical: "/" },
 };
@@ -47,13 +48,13 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Veridian Peptides",
+  name: "VERUM Biolabs",
   url: SITE_URL,
   description:
     "Independently HPLC-tested research peptides with a public certificate-of-analysis vault.",
   contactPoint: {
     "@type": "ContactPoint",
-    email: "support@veridian-peptides.test",
+    email: "support@verum-biolabs.test",
     contactType: "customer support",
   },
 };
@@ -67,6 +68,7 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
+      dir={isRTL(locale) ? "rtl" : "ltr"}
       className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">

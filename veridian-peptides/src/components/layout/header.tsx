@@ -28,7 +28,7 @@ export async function Header() {
       </div>
 
       <div className="container-px flex h-16 items-center justify-between gap-6">
-        <Link href="/" aria-label="Veridian Peptides home">
+        <Link href="/" aria-label="VERUM Biolabs home">
           <Logo />
         </Link>
 

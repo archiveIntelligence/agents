@@ -57,7 +57,7 @@ export const nowPaymentsProvider: PaymentProvider = {
         price_currency: "eur",
         pay_currency: settlementCurrency(),
         order_id: order.reference,
-        order_description: `Veridian Peptides order ${order.reference}`,
+        order_description: `VERUM Biolabs order ${order.reference}`,
         success_url: `${appUrl}/checkout?paid=1`,
         cancel_url: `${appUrl}/cart`,
         is_fee_paid_by_user: true,

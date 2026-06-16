@@ -7,6 +7,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { OrderSummary } from "@/components/cart/order-summary";
 import { IncentiveMeter } from "@/components/cart/incentive-meter";
 import { TrustBadges } from "@/components/ui/trust-badges";
+import { ProductImage } from "@/components/product/product-image";
 import { discountPercent } from "@/lib/format";
 
 export default function CartPage() {
@@ -35,13 +36,13 @@ export default function CartPage() {
         <ul className="divide-y divide-border rounded-2xl border border-border bg-surface">
           {lines.map((line) => (
             <li key={line.slug} className="flex gap-4 p-4">
-              <div className="flex h-20 w-20 flex-none items-center justify-center rounded-xl border border-border bg-gradient-to-br from-brand-50 via-surface to-ink-100">
-                <svg width="36" height="36" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-                  <rect x="24" y="6" width="16" height="6" rx="2" fill="var(--color-brand-700)" />
-                  <path d="M26 12h12v36a6 6 0 0 1-12 0V12Z" fill="white" stroke="var(--color-brand-700)" strokeWidth="2" />
-                  <path d="M26 34h12v14a6 6 0 0 1-12 0V34Z" fill="var(--color-brand-300)" />
-                </svg>
-              </div>
+              <ProductImage
+                name={line.product.name}
+                size={line.product.size}
+                slug={line.slug}
+                showSize={false}
+                className="h-20 w-20 flex-none rounded-xl border border-border"
+              />
 
               <div className="flex flex-1 flex-col">
                 <div className="flex items-start justify-between gap-4">

@@ -1,7 +1,7 @@
 "use client";
 
 // Interactive WebGL shader background for the hero, ported from the
-// "Veridian Hero" design. The original shipped GLSL (HERO_COMMON + variants)
+// "VERUM hero" design. The original shipped GLSL (HERO_COMMON + variants)
 // is kept verbatim; this component supplies a minimal renderer in place of the
 // missing renderer.js, plus React lifecycle, pointer interaction, click
 // ripples, reduced-motion handling and visibility/offscreen pausing.
@@ -38,7 +38,8 @@ float noise(vec2 p){
 float fbm(vec2 p){
   float v = 0.0, a = 0.5;
   mat2 m = mat2(1.6, 1.2, -1.2, 1.6);
-  for(int i=0;i<6;i++){ v += a*noise(p); p = m*p; a *= 0.5; }
+  // 4 octaves: visually close to 6 for this soft field, ~33% less fragment work.
+  for(int i=0;i<4;i++){ v += a*noise(p); p = m*p; a *= 0.5; }
   return v;
 }
 float rippleField(vec2 uv){
@@ -144,17 +145,19 @@ void main(){
   float n3 = fbm(p*2.6 + q*3.2 + vec2(1.7, -t*1.3));
   float v  = fbm(p + q*2.4 + vec2(n3)*1.8);
   float turb = abs(fbm(p*3.4 + q*2.0 - t*0.6) - 0.5) * 2.0;
+  // Softened, less-marble veining with restrained lilac accents — detail kept in
+  // the veins, but only a gentle violet note rather than a heavy hue wash.
   float ridgeA = abs(sin((v*1.6 + turb*0.9)*6.2832 + u_time*0.04));
-  float veinA  = pow(1.0 - ridgeA, 3.4);
+  float veinA  = pow(1.0 - ridgeA, 2.6);
   float ridgeB = abs(sin((v*3.7 - turb*1.4)*6.2832 - u_time*0.05));
-  float veinB  = pow(1.0 - ridgeB, 5.0) * 0.7;
+  float veinB  = pow(1.0 - ridgeB, 4.0) * 0.3;
   float veins  = clamp(veinA + veinB, 0.0, 1.0);
-  vec3 col = mix(CREAM, SAGE, smoothstep(0.16, 0.86, v));
-  col = mix(col, GREEN, veins*0.60);
-  col = mix(col, DEEP,  veins*smoothstep(0.42, 0.92, v)*0.42);
-  col = mix(col, DEEP, pow(veinA, 2.0)*0.30);
-  col = mix(col, LILAC, smoothstep(0.46, 0.0, v) * 0.55);
-  col = mix(col, LILAC_DEEP, veins*smoothstep(0.0, 0.4, v)*(1.0-smoothstep(0.4,0.7,v))*0.45);
+  vec3 col = mix(CREAM, SAGE, smoothstep(0.14, 0.84, v));
+  col = mix(col, GREEN, veins*0.42);
+  col = mix(col, DEEP,  veins*smoothstep(0.42, 0.92, v)*0.28);
+  col = mix(col, DEEP, pow(veinA, 2.0)*0.16);
+  col = mix(col, LILAC, smoothstep(0.46, 0.0, v) * 0.34);
+  col = mix(col, LILAC_DEEP, veins*smoothstep(0.0, 0.4, v)*(1.0-smoothstep(0.4,0.7,v))*0.22);
   col = mix(col, LILAC, smoothstep(0.30, 0.62, v)*(1.0-smoothstep(0.62,0.9,v))*0.30);
   float leftLift = smoothstep(0.15, -0.55, uv.x);
   col = mix(col, CREAM, leftLift*0.40);
@@ -231,7 +234,9 @@ export function HeroShader({
     };
 
     let w = 0, h = 0;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Cap device-pixel-ratio at 1.5: on 2×/3× displays this cuts fragment-shader
+    // work by 1.8–4× with no visible loss on this soft, blurred field.
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     const resize = () => {
       const r = canvas.getBoundingClientRect();
       w = Math.max(1, Math.round(r.width * dpr));
@@ -291,9 +296,16 @@ export function HeroShader({
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
+    // Throttle to ~40fps: the field drifts slowly, so capping frames roughly
+    // halves GPU/CPU vs an uncapped 120Hz display while staying smooth.
+    const FRAME_MS = 1000 / 40;
+    let lastDraw = -Infinity;
     const loop = (now: number) => {
       if (!running) return;
-      renderFrame(now);
+      if (now - lastDraw >= FRAME_MS) {
+        renderFrame(now);
+        lastDraw = now;
+      }
       raf = requestAnimationFrame(loop);
     };
 

@@ -20,7 +20,7 @@ export default function WholesalePage() {
       </p>
       <h2>Request a quote</h2>
       <form
-        action="mailto:wholesale@veridian-peptides.test"
+        action="mailto:wholesale@verum-biolabs.test"
         method="post"
         encType="text/plain"
         className="space-y-4 rounded-2xl border border-border bg-surface p-6"

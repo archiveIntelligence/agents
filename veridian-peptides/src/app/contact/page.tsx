@@ -15,15 +15,15 @@ export default function ContactPage() {
     >
       <ul>
         <li>
-          Email: <a href="mailto:support@veridian-peptides.test">support@veridian-peptides.test</a>
+          Email: <a href="mailto:support@verum-biolabs.test">support@verum-biolabs.test</a>
         </li>
-        <li>Wholesale: wholesale@veridian-peptides.test</li>
+        <li>Wholesale: wholesale@verum-biolabs.test</li>
         <li>Support hours: Mon–Fri, 09:00–17:00 CET</li>
       </ul>
 
       <h2>Send a message</h2>
       <form
-        action="mailto:support@veridian-peptides.test"
+        action="mailto:support@verum-biolabs.test"
         method="post"
         encType="text/plain"
         className="space-y-4 rounded-2xl border border-border bg-surface p-6"

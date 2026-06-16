@@ -1,107 +1,82 @@
-// Lightweight i18n: a locale cookie + flat message dictionaries.
-// EN is the source locale; DE is a full translation of the app chrome and
-// primary storefront surfaces. Add keys here and they are available to both
-// the server `getServerT()` helper and the client `useT()` hook.
+// Lightweight i18n: a locale cookie + flat message dictionaries, one per
+// language under ./messages. English is the source locale; every other language
+// falls back to English per-key. The active locale comes from the `vp.locale`
+// cookie, or — on first visit — from the browser's Accept-Language header.
 
-export type Locale = "en" | "de";
+import { messages } from "./messages";
+
+export type Locale = keyof typeof messages;
 
 export const LOCALE_COOKIE = "vp.locale";
 export const DEFAULT_LOCALE: Locale = "en";
 
-export const LOCALES: { code: Locale; label: string }[] = [
-  { code: "en", label: "EN" },
-  { code: "de", label: "DE" },
+/** Right-to-left scripts — used to set `dir="rtl"` on <html>. */
+const RTL = new Set<Locale>(["ar", "fa", "ur"]);
+export function isRTL(locale: Locale): boolean {
+  return RTL.has(locale);
+}
+
+/** Display metadata for the language switcher (native names). */
+export const LOCALES: { code: Locale; label: string; native: string }[] = [
+  { code: "en", label: "EN", native: "English" },
+  { code: "zh", label: "ZH", native: "中文" },
+  { code: "hi", label: "HI", native: "हिन्दी" },
+  { code: "es", label: "ES", native: "Español" },
+  { code: "fr", label: "FR", native: "Français" },
+  { code: "ar", label: "AR", native: "العربية" },
+  { code: "bn", label: "BN", native: "বাংলা" },
+  { code: "pt", label: "PT", native: "Português" },
+  { code: "ru", label: "RU", native: "Русский" },
+  { code: "ur", label: "UR", native: "اردو" },
+  { code: "id", label: "ID", native: "Bahasa Indonesia" },
+  { code: "de", label: "DE", native: "Deutsch" },
+  { code: "ja", label: "JA", native: "日本語" },
+  { code: "tr", label: "TR", native: "Türkçe" },
+  { code: "ko", label: "KO", native: "한국어" },
+  { code: "vi", label: "VI", native: "Tiếng Việt" },
+  { code: "it", label: "IT", native: "Italiano" },
+  { code: "fa", label: "FA", native: "فارسی" },
+  { code: "pl", label: "PL", native: "Polski" },
+  { code: "uk", label: "UK", native: "Українська" },
+  { code: "nl", label: "NL", native: "Nederlands" },
+  { code: "th", label: "TH", native: "ไทย" },
+  { code: "sv", label: "SV", native: "Svenska" },
+  { code: "el", label: "EL", native: "Ελληνικά" },
 ];
 
 export function isLocale(value: unknown): value is Locale {
-  return value === "en" || value === "de";
+  return typeof value === "string" && value in messages;
 }
 
-type Messages = Record<string, string>;
+/**
+ * Pick the best supported locale from an Accept-Language header, e.g.
+ * "fr-CH,fr;q=0.9,en;q=0.8". Matches the primary language subtag (so `pt-BR`
+ * → `pt`), honours q-weights, and falls back to the default locale.
+ */
+export function matchLocale(acceptLanguage: string | null | undefined): Locale {
+  if (!acceptLanguage) return DEFAULT_LOCALE;
+  const ranked = acceptLanguage
+    .split(",")
+    .map((part) => {
+      const [tag, ...params] = part.trim().split(";");
+      const q = params.find((p) => p.trim().startsWith("q="));
+      const weight = q ? parseFloat(q.split("=")[1]) : 1;
+      return { tag: tag.trim().toLowerCase(), weight: isNaN(weight) ? 0 : weight };
+    })
+    .filter((r) => r.tag)
+    .sort((a, b) => b.weight - a.weight);
 
-const en: Messages = {
-  "nav.allPeptides": "All Research Peptides",
-  "nav.stacks": "Research Stacks",
-  "nav.quality": "Quality & Testing",
-  "nav.coa": "COA Vault",
-  "nav.blog": "Research Blog",
-  "header.signIn": "Sign in",
-  "header.cart": "Cart",
-  "announce.shipping": "Free tracked EU shipping over €200",
-  "announce.coa": "Independent COA for every batch",
-  "footer.tagline":
-    "Independently tested research peptides. Supplied strictly for laboratory research. Not for human consumption.",
-  "footer.products": "Products",
-  "footer.company": "Company",
-  "footer.support": "Support",
-  "footer.legal": "Legal",
-  "footer.rights": "For research use only.",
-  "home.hero.badge": "Independently HPLC tested",
-  "home.hero.titleA": "Research peptides you can",
-  "home.hero.titleHighlight": "verify",
-  "home.hero.lead":
-    "Every batch is tested by an independent laboratory and published in our public COA vault. Traceable purity, transparent sourcing, fast EU shipping.",
-  "home.hero.shopAll": "Shop all peptides",
-  "home.hero.browseCoa": "Browse COA vault",
-  "home.hero.disclaimer": "For laboratory and research use only. Not for human consumption.",
-  "home.stats.purity": "Average tested purity",
-  "home.stats.countries": "Countries shipped",
-  "home.stats.coa": "Batches with public COA",
-  "home.stats.shipping": "Tracked shipping from",
-  "home.featured": "Featured research peptides",
-  "home.categories": "Browse by research area",
-  "home.blog": "From the research blog",
-  "home.viewAll": "View all",
-  "common.cookie.text": "We use essential cookies to run this site. See our",
-  "common.cookie.settings": "cookie settings",
-  "common.cookie.essential": "Essential only",
-  "common.cookie.acceptAll": "Accept all",
-};
-
-const de: Messages = {
-  "nav.allPeptides": "Alle Research-Peptide",
-  "nav.stacks": "Research-Stacks",
-  "nav.quality": "Qualität & Tests",
-  "nav.coa": "COA-Archiv",
-  "nav.blog": "Research-Blog",
-  "header.signIn": "Anmelden",
-  "header.cart": "Warenkorb",
-  "announce.shipping": "Kostenloser EU-Versand mit Tracking ab €200",
-  "announce.coa": "Unabhängiges COA für jede Charge",
-  "footer.tagline":
-    "Unabhängig getestete Research-Peptide. Ausschließlich für Laborforschung. Nicht zum menschlichen Verzehr.",
-  "footer.products": "Produkte",
-  "footer.company": "Unternehmen",
-  "footer.support": "Support",
-  "footer.legal": "Rechtliches",
-  "footer.rights": "Nur für Forschungszwecke.",
-  "home.hero.badge": "Unabhängig per HPLC getestet",
-  "home.hero.titleA": "Research-Peptide, die du",
-  "home.hero.titleHighlight": "verifizieren",
-  "home.hero.lead":
-    "Jede Charge wird von einem unabhängigen Labor getestet und in unserem öffentlichen COA-Archiv veröffentlicht. Nachvollziehbare Reinheit, transparente Herkunft, schneller EU-Versand.",
-  "home.hero.shopAll": "Alle Peptide ansehen",
-  "home.hero.browseCoa": "COA-Archiv öffnen",
-  "home.hero.disclaimer": "Nur für Labor- und Forschungszwecke. Nicht zum menschlichen Verzehr.",
-  "home.stats.purity": "Durchschnittliche Reinheit",
-  "home.stats.countries": "Belieferte Länder",
-  "home.stats.coa": "Chargen mit öffentlichem COA",
-  "home.stats.shipping": "Versand mit Tracking ab",
-  "home.featured": "Ausgewählte Research-Peptide",
-  "home.categories": "Nach Forschungsbereich stöbern",
-  "home.blog": "Aus dem Research-Blog",
-  "home.viewAll": "Alle ansehen",
-  "common.cookie.text": "Wir verwenden essenzielle Cookies für den Betrieb dieser Seite. Siehe unsere",
-  "common.cookie.settings": "Cookie-Einstellungen",
-  "common.cookie.essential": "Nur essenzielle",
-  "common.cookie.acceptAll": "Alle akzeptieren",
-};
-
-const messages: Record<Locale, Messages> = { en, de };
+  for (const { tag } of ranked) {
+    if (isLocale(tag)) return tag;
+    const base = tag.split("-")[0];
+    if (isLocale(base)) return base;
+  }
+  return DEFAULT_LOCALE;
+}
 
 export type TranslateFn = (key: string) => string;
 
 export function translator(locale: Locale): TranslateFn {
-  const dict = messages[locale] ?? en;
-  return (key: string) => dict[key] ?? en[key] ?? key;
+  const dict = messages[locale] ?? messages.en;
+  return (key: string) => dict[key] ?? messages.en[key] ?? key;
 }

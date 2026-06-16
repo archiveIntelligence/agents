@@ -10,7 +10,7 @@ const MODEL = process.env.IMG_MODEL || "gemini-3.1-flash-image";
 const OUT = "public/products/_options";
 mkdirSync(OUT, { recursive: true });
 
-const BRAND = "VERUM BIOSCIENCES";
+const BRAND = "VERUM BIOLABS";
 const NAME = "Tirzepatide";
 
 // Compact, clinical PHARMA label covering only the lower-middle third of the vial.

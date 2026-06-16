@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { SceneImage } from "@/components/media/scene-image";
 import { getBlogPosts } from "@/lib/repository";
 import { formatDate } from "@/lib/format";
 
@@ -27,14 +28,22 @@ export default async function BlogIndexPage() {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="group flex flex-col rounded-2xl border border-border bg-surface p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
+            className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
           >
-            <Badge tone="neutral">{post.category}</Badge>
-            <h2 className="mt-4 text-lg leading-snug transition-colors group-hover:text-brand-700">{post.title}</h2>
-            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">{post.excerpt}</p>
-            <span className="mt-4 text-xs text-muted-foreground">
-              {formatDate(post.publishedOn)} · {post.readingMinutes} min read
-            </span>
+            <SceneImage
+              src={`/blog/${post.slug}.png`}
+              alt={post.title}
+              className="aspect-[16/9]"
+              imgClassName="transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="flex flex-1 flex-col p-6">
+              <Badge tone="neutral">{post.category}</Badge>
+              <h2 className="mt-4 text-lg leading-snug transition-colors group-hover:text-brand-700">{post.title}</h2>
+              <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">{post.excerpt}</p>
+              <span className="mt-4 text-xs text-muted-foreground">
+                {formatDate(post.publishedOn)} · {post.readingMinutes} min read
+              </span>
+            </div>
           </Link>
         ))}
       </div>

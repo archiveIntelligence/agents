@@ -37,7 +37,7 @@ function editPrompt(g) {
   const lot = g.batch || `${g.base.slice(0, 3).toUpperCase()}-0001`;
   if (isWater(g.name)) {
     const note = /bacteriostatic/i.test(g.name) ? "30 ml    0.9% Benzyl Alcohol" : "30 ml    Preservative-free";
-    return `Reproduce this product photograph EXACTLY — identical clear glass vial, identical slim clinical label design, layout, fonts, the "VERUM BIOSCIENCES" wordmark, the green accent rule, the barcode, identical cream background with the soft botanical leaf shadow, identical lighting, reflection and composition.
+    return `Reproduce this product photograph EXACTLY — identical clear glass vial, identical slim clinical label design, layout, fonts, the "VERUM BIOLABS" wordmark, the green accent rule, the barcode, identical cream background with the soft botanical leaf shadow, identical lighting, reflection and composition.
 Change the contents to CLEAR STERILE LIQUID filling most of the vial (no powder). Change ONLY the printed label text:
 - product name: "${g.name}"
 - data row: "${note}"
@@ -46,7 +46,7 @@ Change the bottom fine print to "FOR LABORATORY USE ONLY". Keep everything else 
   const colour = isBlue(g.name)
     ? "Change the lyophilised powder inside the vial to a pale sky-blue colour (copper-peptide). "
     : "Keep the lyophilised powder inside white. ";
-  return `Reproduce this product photograph EXACTLY — identical clear glass vial, identical slim clinical label design, layout, fonts, the "VERUM BIOSCIENCES" wordmark, the green accent rule, the barcode, identical cream background with the soft botanical leaf shadow, identical lighting, reflection and composition.
+  return `Reproduce this product photograph EXACTLY — identical clear glass vial, identical slim clinical label design, layout, fonts, the "VERUM BIOLABS" wordmark, the green accent rule, the barcode, identical cream background with the soft botanical leaf shadow, identical lighting, reflection and composition.
 ${colour}Change ONLY the printed label text:
 - product name: "${g.name}"
 - data row: "Lot ${lot}    HPLC >=${Math.floor(Number(g.purity))}%    Store -20C"
