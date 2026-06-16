@@ -35,7 +35,7 @@ export function ProductImage({
       ) : (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={`/products/${base}.png`}
+          src={`/products/${base}.webp`}
           alt={`${name} ${size} research vial`}
           loading="lazy"
           onError={() => setFailed(true)}

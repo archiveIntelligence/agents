@@ -27,7 +27,7 @@ export function SceneImage({
       {!failed && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={src}
+          src={src.replace(/\.png$/, ".webp")}
           alt={alt}
           loading="lazy"
           onError={() => setFailed(true)}
