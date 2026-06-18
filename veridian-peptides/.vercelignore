@@ -1,0 +1,9 @@
+# Never upload local secrets/env to Vercel — the build must rely on
+# Vercel-managed env vars only. Without DATABASE_URL the app runs in its
+# in-memory data mode (free preview, no database needed).
+.env
+.env.*
+
+# Local-only tooling artifacts (not needed for the build)
+.vercel
+*.bak
