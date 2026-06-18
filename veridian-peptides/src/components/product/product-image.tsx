@@ -7,9 +7,16 @@
 import { useState } from "react";
 import { VialImage } from "@/components/product/vial-image";
 
-/** Strip the trailing size segment from a variant slug → product group base. */
+/**
+ * Strip the trailing size segment from a variant slug → product group base.
+ * Handles peptide sizes (10mg, 0.5ml, 100iu…) and lab-supply pack sizes
+ * (100pack, each, kit) so the image filename resolves for every category.
+ */
 function groupBase(slug: string): string {
-  return slug.replace(/-(\d+(?:\.\d+)?(?:mg|ml|iu|mcg|kit|units?))$/i, "");
+  return slug.replace(
+    /-(?:\d+(?:\.\d+)?(?:mg|ml|iu|mcg|units?)|\d*pack|each|kit)$/i,
+    "",
+  );
 }
 
 export function ProductImage({
