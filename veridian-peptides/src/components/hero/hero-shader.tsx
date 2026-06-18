@@ -258,20 +258,10 @@ export function HeroShader({
       mouse.tx = ((e.clientX - r.left) / r.width) * w;
       mouse.ty = (1 - (e.clientY - r.top) / r.height) * h;
     };
+    // Click ripples removed by design — only the cursor-follow smear remains.
+    // The ripple uniform stays all-zero so the shader's rippleField adds nothing.
     const ripples = new Float32Array(30);
-    let rIdx = 0;
-    const onDown = (e: PointerEvent) => {
-      const r = canvas.getBoundingClientRect();
-      const px = ((e.clientX - r.left) / r.width) * w;
-      const py = (1 - (e.clientY - r.top) / r.height) * h;
-      const base = (rIdx % 10) * 3;
-      ripples[base] = px;
-      ripples[base + 1] = py;
-      ripples[base + 2] = (performance.now() - start) / 1000;
-      rIdx++;
-    };
     window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerdown", onDown, { passive: true });
 
     const start = performance.now();
     let raf = 0;
@@ -349,7 +339,6 @@ export function HeroShader({
         ro.disconnect();
         document.removeEventListener("visibilitychange", onVis);
         window.removeEventListener("pointermove", onMove);
-        window.removeEventListener("pointerdown", onDown);
         gl.getExtension("WEBGL_lose_context")?.loseContext();
       };
     }
@@ -357,7 +346,6 @@ export function HeroShader({
     return () => {
       ro.disconnect();
       window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerdown", onDown);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [variant, energy]);
