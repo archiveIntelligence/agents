@@ -15,8 +15,8 @@ const NAME = "Tirzepatide";
 
 // Compact, clinical PHARMA label covering only the lower-middle third of the vial.
 const BASE = `Ultra-realistic professional pharmaceutical product photograph, studio quality, 1:1 square.
-A single small clear glass research vial with a brushed-aluminium crimp cap and a grey rubber stopper, standing upright and centered, clearly containing fine white lyophilised peptide powder filling the lower third of the vial.
-On the vial is a SMALL, SLIM clinical pharmaceutical label that covers ONLY the lower-middle third of the vial's height — leave the upper half of the glass and the powder clearly visible above the label and a strip of clear glass below it. The label is compact, wider than it is tall, with a thin printed border (boxed pharma layout).
+A single small clear glass research vial with a brushed-aluminium crimp cap and a grey rubber stopper, standing upright and centered. It contains only a SMALL amount of fine white lyophilised peptide powder — a thin layer resting at the very bottom of the vial.
+On the vial is a clean, slim clinical pharmaceutical label. IMPORTANT: the powder must stay ENTIRELY BELOW the label — the powder line sits beneath the bottom edge of the label, so NO powder shows above or behind the label. Above the label is empty, perfectly clear glass. The label itself is crisp and unobstructed (nothing overlapping it). The label is compact, wider than it is tall, with a thin printed border (boxed pharma layout).
 Clinical label content, crisp clean sans-serif, perfectly legible, no spelling mistakes:
 - top: small uppercase wordmark "${BRAND}" with a thin emerald-green rule under it
 - the product name "${NAME}" in clear medical sans-serif, bold

@@ -3,6 +3,7 @@ import { Logo } from "@/components/brand/logo";
 import { CartButton } from "@/components/layout/cart-button";
 import { CurrencySwitcher } from "@/components/i18n/currency-switcher";
 import { LanguageSwitcher } from "@/components/i18n/language-switcher";
+import { MobileMenu } from "@/components/layout/mobile-menu";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getServerT } from "@/lib/i18n/server";
 
@@ -58,6 +59,11 @@ export async function Header() {
             {user ? `Hi, ${user.firstName}` : t("header.signIn")}
           </Link>
           <CartButton label={t("header.cart")} />
+          <MobileMenu
+            items={nav.map((item) => ({ href: item.href, label: t(item.key) }))}
+            signInHref={user ? "/account" : "/account/login"}
+            signInLabel={user ? `Hi, ${user.firstName}` : t("header.signIn")}
+          />
         </div>
       </div>
     </header>
