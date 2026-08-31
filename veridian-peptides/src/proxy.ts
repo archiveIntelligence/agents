@@ -15,7 +15,33 @@ const SECURITY_HEADERS: Record<string, string> = {
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
 };
 
+const SITE_USER = process.env.SITE_USER ?? "preview";
+
+// Optional HTTP Basic Auth gate for private preview tunnels (ngrok, cloudflared,
+// etc.). Active only when SITE_PASSWORD is set, so normal deploys are unaffected.
+function basicAuthGate(request: NextRequest): NextResponse | null {
+  const password = process.env.SITE_PASSWORD;
+  if (!password) return null;
+
+  const header = request.headers.get("authorization");
+  if (header?.startsWith("Basic ")) {
+    try {
+      const [user, pass] = atob(header.slice(6)).split(":");
+      if (user === SITE_USER && pass === password) return null;
+    } catch {
+      // malformed header — fall through to challenge
+    }
+  }
+  return new NextResponse("Authentication required", {
+    status: 401,
+    headers: { "WWW-Authenticate": 'Basic realm="Preview", charset="UTF-8"' },
+  });
+}
+
 export function proxy(request: NextRequest) {
+  const gate = basicAuthGate(request);
+  if (gate) return gate;
+
   const response = NextResponse.next();
 
   for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
