@@ -1,0 +1,184 @@
+@import "tailwindcss";
+
+/*
+  Veridian Peptides — Design System
+  Original branding (no third-party brand assets).
+  Aesthetic: Premium "lab luxury" (light) — warm paper canvas, deep jewel
+  emerald, elegant Fraunces display serif over clean Geist sans, soft
+  layered shadows and hairline borders.
+*/
+
+@theme {
+  /* ---- Brand: deep jewel emerald (primary) ---- */
+  --color-brand-50: #f0faf5;
+  --color-brand-100: #d9f2e6;
+  --color-brand-200: #b0e3cd;
+  --color-brand-300: #7accab;
+  --color-brand-400: #41ad86;
+  --color-brand-500: #1f8c66;
+  --color-brand-600: #0d6f50;
+  --color-brand-700: #0a5740;
+  --color-brand-800: #0a4534;
+  --color-brand-900: #08372a;
+  --color-brand-950: #04201a;
+
+  /* ---- Accent: refined violet ---- */
+  --color-accent-50: #f5f3ff;
+  --color-accent-100: #ece8fe;
+  --color-accent-200: #ddd6fe;
+  --color-accent-300: #c4b5fd;
+  --color-accent-400: #a78bfa;
+  --color-accent-500: #8b5cf6;
+  --color-accent-600: #7c3aed;
+  --color-accent-700: #6d28d9;
+  --color-accent-800: #5b21b6;
+  --color-accent-900: #4c1d95;
+
+  /* ---- Gold: champagne accent for premium detailing ---- */
+  --color-gold-100: #f7efdd;
+  --color-gold-200: #ecd9b0;
+  --color-gold-300: #ddbd7e;
+  --color-gold-400: #cda159;
+  --color-gold-500: #b8863c;
+  --color-gold-600: #95692c;
+
+  /* ---- Neutral scale (warm-tinted) ---- */
+  --color-ink-50: #f8f8f5;
+  --color-ink-100: #f0f0ec;
+  --color-ink-200: #e4e3dc;
+  --color-ink-300: #cbcabf;
+  --color-ink-400: #a0a094;
+  --color-ink-500: #74746a;
+  --color-ink-600: #585852;
+  --color-ink-700: #43433f;
+  --color-ink-800: #2a2a27;
+  --color-ink-900: #191916;
+  --color-ink-950: #0d0d0b;
+
+  /* ---- Semantic ---- */
+  --color-success: #0d6f50;
+  --color-warning: #b87514;
+  --color-error: #c2392f;
+  --color-info: #2563eb;
+
+  /* ---- Fonts ---- */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-display: var(--font-display-serif), Georgia, "Times New Roman", serif;
+  /* (--font-display-serif is injected by next/font in layout.tsx) */
+
+  /* ---- Premium soft shadows ---- */
+  --shadow-soft: 0 1px 2px rgba(13, 17, 15, 0.04), 0 4px 16px rgba(13, 17, 15, 0.05);
+  --shadow-lift: 0 2px 4px rgba(13, 17, 15, 0.05), 0 12px 32px rgba(13, 17, 15, 0.09);
+  --shadow-ring: 0 0 0 1px rgba(13, 111, 80, 0.08);
+
+  /* ---- Radius ---- */
+  --radius: 1rem;
+}
+
+/* Semantic surface tokens (light — premium paper) */
+:root {
+  --background: #faf9f5;
+  --surface: #ffffff;
+  --surface-muted: #f2f1ea;
+  --foreground: #191916;
+  --muted-foreground: #686861;
+  --border-color: #e7e5dc;
+  --ring: #0d6f50;
+}
+
+.dark {
+  --background: #0d0d0b;
+  --surface: #191916;
+  --surface-muted: #2a2a27;
+  --foreground: #f8f8f5;
+  --muted-foreground: #a0a094;
+  --border-color: #2a2a27;
+  --ring: #41ad86;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border-color);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    border-color: var(--border-color);
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Headlines speak in the display serif for a premium voice. */
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.012em;
+  }
+
+  ::selection {
+    background: var(--color-brand-200);
+    color: var(--color-brand-900);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .container-px {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 80rem;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 640px) {
+    .container-px {
+      padding-inline: 1.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .container-px {
+      padding-inline: 2rem;
+    }
+  }
+
+  /* Premium helpers */
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  .shadow-lift {
+    box-shadow: var(--shadow-lift);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  /* Subtle uppercase eyebrow label used above headings */
+  .eyebrow {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.7rem;
+    color: var(--muted-foreground);
+  }
+  /* Hairline divider that reads as a fine engraved line */
+  .hairline {
+    border-color: var(--border-color);
+  }
+}

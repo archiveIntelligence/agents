@@ -1,0 +1,197 @@
+// Veridian Peptides — data model.
+// Mirrors the seed-backed domain types so the repository layer can switch
+// from in-memory data to Postgres without UI changes.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum StockStatus {
+  IN_STOCK
+  LOW_STOCK
+  OUT_OF_STOCK
+  PRE_ORDER
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  FULFILLED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  SEPA
+  PAYSERA
+  CRYPTO
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         Role      @default(CUSTOMER)
+  sessions     Session[]
+  orders       Order[]
+  createdAt    DateTime  @default(now())
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String
+  products    Product[]
+  createdAt   DateTime  @default(now())
+}
+
+model Product {
+  id             String      @id @default(cuid())
+  slug           String      @unique
+  name           String
+  tagline        String
+  description    String
+  priceCents     Int
+  compareAtCents Int?
+  size           String
+  purity         Float
+  stock          StockStatus @default(IN_STOCK)
+  featured       Boolean     @default(false)
+  specs          Json        @default("[]")
+  // Skimmable buzzword bullets ({ icon, label }[]) shown first on the PDP.
+  highlights     Json        @default("[]")
+  // Long package-insert monograph ({ heading, body }[]); null when not authored.
+  monograph      Json?
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  coas        Coa[]
+  bundleItems BundleItem[]
+  orderItems  OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([featured])
+}
+
+model Coa {
+  id        String   @id @default(cuid())
+  batch     String   @unique
+  testedOn  DateTime
+  purity    Float
+  lab       String
+  verifyUrl String
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+}
+
+model Bundle {
+  id             String       @id @default(cuid())
+  slug           String       @unique
+  name           String
+  description    String
+  savingsPercent Int
+  items          BundleItem[]
+  createdAt      DateTime     @default(now())
+}
+
+model BundleItem {
+  bundle    Bundle  @relation(fields: [bundleId], references: [id])
+  bundleId  String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  @@id([bundleId, productId])
+}
+
+model BlogPost {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  title          String
+  excerpt        String
+  body           String   @default("")
+  category       String
+  publishedOn    DateTime
+  readingMinutes Int
+  createdAt      DateTime @default(now())
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  reference     String        @unique
+  email         String
+  firstName     String
+  lastName      String
+  addressLine1  String
+  city          String
+  postalCode    String
+  country       String
+  paymentMethod PaymentMethod
+  status        OrderStatus   @default(PENDING_PAYMENT)
+  // External payment provider invoice/intent id, for webhook reconciliation.
+  providerRef   String?
+
+  // Optional link to a registered account (guest checkout leaves this null).
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  subtotalCents     Int
+  bulkDiscountCents Int
+  vatCents          Int
+  shippingCents     Int
+  totalCents        Int
+
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([userId])
+}
+
+model OrderItem {
+  id             String  @id @default(cuid())
+  order          Order   @relation(fields: [orderId], references: [id])
+  orderId        String
+  product        Product @relation(fields: [productId], references: [id])
+  productId      String
+  // Snapshot of name/price at purchase time for an immutable record.
+  productName    String
+  unitPriceCents Int
+  quantity       Int
+
+  @@index([orderId])
+}

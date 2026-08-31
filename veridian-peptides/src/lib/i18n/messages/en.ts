@@ -1,0 +1,55 @@
+// English — the source locale and the canonical key set. Every other language
+// file mirrors these keys; any missing key falls back to the English value.
+
+import type { Messages } from "./types";
+
+export const en: Messages = {
+  "nav.allPeptides": "All Research Peptides",
+  "nav.stacks": "Research Stacks",
+  "nav.quality": "Quality & Testing",
+  "nav.coa": "COA Vault",
+  "nav.blog": "Research Blog",
+  "header.signIn": "Sign in",
+  "header.cart": "Cart",
+  "announce.shipping": "Free tracked EU shipping over €200",
+  "announce.coa": "Independent COA for every batch",
+  "footer.tagline":
+    "Independently tested research peptides. Supplied strictly for laboratory research. Not for human consumption.",
+  "footer.products": "Products",
+  "footer.company": "Company",
+  "footer.support": "Support",
+  "footer.legal": "Legal",
+  "footer.rights": "For research use only.",
+  "home.hero.badge": "Independently HPLC tested",
+  "home.hero.titleA": "Research peptides you can",
+  "home.hero.titleHighlight": "verify",
+  "home.hero.lead":
+    "Every batch is tested by an independent laboratory and published in our public COA vault. Traceable purity, transparent sourcing, fast EU shipping.",
+  "home.hero.shopAll": "Shop all peptides",
+  "home.hero.browseCoa": "Browse COA vault",
+  "home.hero.disclaimer": "For laboratory and research use only. Not for human consumption.",
+  "home.stats.purity": "Average tested purity",
+  "home.stats.countries": "Countries shipped",
+  "home.stats.coa": "Batches with public COA",
+  "home.stats.shipping": "Tracked shipping from",
+  "home.trust.testing.title": "Independent lab testing",
+  "home.trust.testing.desc": "Third-party HPLC reports for every batch.",
+  "home.trust.verify.title": "Batch verification",
+  "home.trust.verify.desc": "Confirm any COA by its batch number.",
+  "home.trust.coldchain.title": "Cold-chain dispatch",
+  "home.trust.coldchain.desc": "Temperature-aware handling and tracking.",
+  "home.coa.badge": "Quality & Testing",
+  "home.coa.title": "Transparency, batch by batch",
+  "home.coa.lead":
+    "We publish the certificate of analysis for every batch we sell. Search the vault, read the HPLC purity figures, and verify the report independently — before you ever place an order.",
+  "home.coa.openVault": "Open the COA vault",
+  "home.coa.verify": "Verify a batch",
+  "home.featured": "Featured research peptides",
+  "home.categories": "Browse by research area",
+  "home.blog": "From the research blog",
+  "home.viewAll": "View all",
+  "common.cookie.text": "We use essential cookies to run this site. See our",
+  "common.cookie.settings": "cookie settings",
+  "common.cookie.essential": "Essential only",
+  "common.cookie.acceptAll": "Accept all",
+};
